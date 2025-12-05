@@ -9,6 +9,10 @@ class Endpoint(Enum):
     - required info list
     - local storage location for json"""
     DATASETS = EndpointInfo(url_endpoint="getDatasets", required_url_info=[], json_folder="datasets")
-    SITES = EndpointInfo(url_endpoint="getSites", required_url_info=["dataset"], json_folder="sites")
-    DATES = EndpointInfo(url_endpoint="getDataForDate", required_url_info=["dataset", "date"], json_folder="dates")
-    TIMESERIES = EndpointInfo(url_endpoint="getTimeseries", required_url_info=["dataset", "site", "determinand"], json_folder="timeseries")
+    DETERMINANDS = EndpointInfo(url_endpoint="getDeterminands", required_url_info=[], json_folder="determinands")
+    SITES = EndpointInfo(url_endpoint="getSites", required_url_info=["datasetID"], json_folder="sites")
+    DATES = EndpointInfo(url_endpoint="getDataForDate", required_url_info=["datasetID", "date"], json_folder="dates")
+    TIMESERIES_DETERMINAND = EndpointInfo(url_endpoint="getTimeseries", required_url_info=["datasetID", "siteID", "determinand"], json_folder="timeseries")
+    TIMESERIES = EndpointInfo(url_endpoint="getTimeseries", required_url_info=["datasetID", "siteID"], json_folder="timeseries")
+
+
