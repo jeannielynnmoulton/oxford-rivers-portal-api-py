@@ -1,6 +1,7 @@
 import unittest
 import urllib
 
+from src.demo import client
 from src.oxrivers_api.client import OxfordRiversClient
 from src.oxrivers_api.endpoints import Endpoint
 from src.oxrivers_api.exceptions import MissingParameterException, InvalidDateFormat
@@ -52,7 +53,29 @@ class MyTestCase(unittest.TestCase):
         url = OxfordRiversClient.build_url(Endpoint.TIMESERIES_DETERMINAND, datasetID="ea_bathing_water", siteID="EA1234", determinand="EC")
         self.assertEqual(url, "https://oxfordrivers.ceh.ac.uk/getTimeseries?datasetID=ea_bathing_water&siteID=EA1234&determinand=EC")
 
+    def test_getDatasets(self):
+        client = OxfordRiversClient("./data")
+        client.getDatasets()
 
+    def test_getDeterminands(self):
+        client = OxfordRiversClient("./data")
+        client.getDeterminands()
+
+    def test_getSites(self):
+        client = OxfordRiversClient("./data")
+        client.getSites("fft")
+
+    def test_getDataForDate(self):
+        client = OxfordRiversClient("./data")
+        client.getDataForDate("rainfall", "2024-07-31")
+
+    def test_getTimeseries(self):
+        client = OxfordRiversClient("./data")
+        client.getTimeseries("fft", "Oxford")
+
+    def test_getTimeseriesDeterminand(self):
+        client = OxfordRiversClient("./data")
+        client.getTimeseriesDeterminand("ea_wq_sonde", "E01612A", "fdom")
 
 
 if __name__ == '__main__':

@@ -6,3 +6,6 @@ class MissingParameterException(Exception):
 
 class InvalidDateFormat(Exception):
     pass
+
+class ClientRequestError(Exception):
+    pass
