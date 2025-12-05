@@ -1,0 +1,480 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "name": "Alkalinity to pH 4.5 as CaCO3 (mg/l)",
+            "color": "#e31a1c",
+            "description": "Calcium carbonate (CaCO3) is a naturally occurring compound in soils, rocks and water, but also found in agricultural lime. Calcium carbonate increases the pH of water, algal blooms are more likely in higher pH water (8.2 - 8.7).",
+            "datasets": [
+                {
+                    "code": "ea_water_quality",
+                    "id": "0162"
+                }
+            ]
+        },
+        {
+            "name": "Ammonia un-ionised as N (mg/l)",
+            "color": "#fb9a99",
+            "description": "The amount of nitrogen as ammonia (NH3). Ammonia (NH3) is highly toxic to aquatic life.",
+            "datasets": [
+                {
+                    "code": "ea_water_quality",
+                    "id": "0119"
+                }
+            ]
+        },
+        {
+            "name": "Ammonium (mg/L)",
+            "color": "#fdbf6f",
+            "description": "The amount of nitrogen as ammonium (NH4+). Ammonium (NH4+) is damaging to aquatic life.",
+            "datasets": [
+                {
+                    "code": "ea_wq_sonde",
+                    "id": "ammonium"
+                },
+                {
+                    "code": "thames_initiative",
+                    "id": "Dissolved ammonium (NH4) (mg/l)"
+                }
+            ]
+        },
+        {
+            "name": "Ammoniacal Nitrogen as N (mg/l)",
+            "color": "#a6cee3",
+            "description": "The amount of nitrogen as ammonia (NH3) and ammonium ion NH4+. Ammonia species are highly toxic to aquatic life.",
+            "datasets": [
+                {
+                    "code": "ea_water_quality",
+                    "id": "0111"
+                }
+            ],
+            "thresholds": [
+                {
+                    "value": 0.6,
+                    "name": ">= 'Moderate' ammonia (N) threshold",
+                    "visible": "legendonly"
+                },
+                {
+                    "value": 1.1,
+                    "name": ">= 'Poor' ammonia (N) threshold",
+                    "visible": "legendonly"
+                }
+            ]
+        },
+        {
+            "name": "Blue-Green Algae (RFU)",
+            "color": "green",
+            "description": "Blue-green algae (cyanobacteria) occur naturally in rivers but may reach harmful concentrations to both wildlife and humans after artificial input of nutrients from agricultural or sewage discharge.",
+            "datasets": [
+                {
+                    "code": "ea_wq_sonde",
+                    "id": "bga"
+                }
+            ]
+        },
+        {
+            "name": "Carbon, Organic, Dissolved as C :- {DOC} (mg/l)",
+            "color": "#6a3d9a",
+            "description": "DOC is a natural component of rivers and varies based on the soil types in the river catchment. Spikes in DOC may be caused artificially by sewage discharge or agricultural waste.",
+            "datasets": [
+                {
+                    "code": "ea_water_quality",
+                    "id": "0301"
+                }
+            ]
+        },
+        {
+            "name": "Chloride (mg/l)",
+            "color": "#fdbf6f",
+            "description": "Chloride (Cl-) ion occurs naturally in low concentrations in water but may be artificially introduced through wastewater or road deicing salt. High chloride concentrations are toxic to aquatic life.",
+            "datasets": [
+                {
+                    "code": "ea_water_quality",
+                    "id": "0172"
+                }
+            ]
+        },
+        {
+            "name": "Chlorophyll (µg/L)",
+            "color": "#fb9a99",
+            "description": "Chlorophyll is a natural component of river water and is produced by aquatic plants and algae as a pigment for photosynthesis. Spikes in chlorophyll may indicate a harmful algal bloom.",
+            "datasets": [
+                {
+                    "code": "ea_wq_sonde",
+                    "id": "chlorophyll"
+                },
+                {
+                    "code": "thames_initiative",
+                    "id": "Chlorophyll-a (ug/L)"
+                }
+            ]
+        },
+        {
+            "name": "Conductivity at 25 C (µS/cm)",
+            "color": "#d95f02",
+            "description": "Conductivity is affected by the ionic content of river water and varies based on the geology of the riverbed. Spikes in conductivity may occur after sewage or agricultural discharges due to an excess of nutrient ions.",
+            "datasets": [
+                {
+                    "code": "ea_water_quality",
+                    "id": "0077"
+                }
+            ]
+        },
+        {
+            "name": "Conductivity (µS/cm)",
+            "color": "#d95f02",
+            "description": "Conductivity is affected by the ionic content of river water and varies based on the geology of the riverbed. Spikes in conductivity may occur after sewage or agricultural discharges due to an excess of nutrient ions.",
+            "datasets": [
+                {
+                    "code": "ea_wq_sonde",
+                    "id": "conductivity"
+                }
+            ]
+        },
+        {
+            "name": "Dissolved organic carbon (mg/l)",
+            "color": "orange",
+            "description": "Dissolved organic carbon (DOC) is a natural component of rivers and varies based on the soil types in the river catchment. Spikes in DOM may be caused artificially by sewage discharge or agricultural waste.",
+            "datasets": [
+                {
+                    "code": "thames_initiative",
+                    "id": "Dissolved organic carbon (mg/L)"
+                }
+            ]
+        },
+        {
+            "name": "Escherichia coli (EC)",
+            "color": "blue",
+            "description": "Bacteria which can be harmful to human health.",
+            "datasets": [
+                {
+                    "code": "ea_bathing_water",
+                    "id": "EC",
+                    "column": "escherichia coli count"
+                },
+                {
+                    "code": "wtrt",
+                    "id": "EC",
+                    "column": "escherichia coli count"
+                }
+            ],
+            "thresholds": [
+                {
+                    "value": 900,
+                    "name": "90pth <= 'Sufficient' threshold (EC)",
+                    "visible": true
+                }
+            ]
+        },
+        {
+            "name": "Fluorescent Dissolved Organic Matter (RFU)",
+            "color": "orange",
+            "description": "Dissolved organic matter (DOM) is a natural component of rivers and varies based on the soil types in the river catchment. Spikes in DOM may be caused artificially by sewage discharge or agricultural waste.",
+            "datasets": [
+                {
+                    "code": "ea_wq_sonde",
+                    "id": "fdom"
+                }
+            ]
+        },
+        {
+            "name": "Intestinal enterococci (IE)",
+            "color": "red",
+            "description": "Bacteria which can be harmful to human health.",
+            "datasets": [
+                {
+                    "code": "ea_bathing_water",
+                    "id": "IE",
+                    "column": "intestinal enterococci count"
+                },
+                {
+                    "code": "wtrt",
+                    "id": "IE",
+                    "column": "intestinal enterococci count"
+                }
+            ],
+            "thresholds": [
+                {
+                    "value": 330,
+                    "name": "90pth <= 'Sufficient' threshold (IE)",
+                    "visible": true
+                }
+            ]
+        },
+        {
+            "name": "Nitrate as N (mg/l)",
+            "color": "#b2df8a",
+            "description": "Nitrate (NO3-) is a naturally occurring nutrient ion in water but is also found in fertiliser and sewage. Too much nitrate can cause harmful algal blooms.",
+            "datasets": [
+                {
+                    "code": "ea_water_quality",
+                    "id": "0117"
+                },
+                {
+                    "code": "ea_wq_sonde",
+                    "id": "nitrate"
+                },
+                {
+                    "code": "freshwater_watch",
+                    "id": "chemical_nitrate"
+                }
+            ]
+        },
+        {
+            "name": "Nitrite as N (mg/l)",
+            "color": "#33a02c",
+            "description": "Nitrite (NO2-) is a naturally occurring nutrient ion in water but is also used in industry as a food preservative and dye precursor. Nitrite is toxic to aquatic life in high concentrations.",
+            "datasets": [
+                {
+                    "code": "ea_water_quality",
+                    "id": "0118"
+                }
+            ]
+        },
+        {
+            "name": "Nitrogen, Total as N (mg/l)",
+            "color": "#7570b3",
+            "description": "N is a key nutrient for algae and plants, but too much can cause harmful algal blooms.",
+            "datasets": [
+                {
+                    "code": "ea_water_quality",
+                    "id": "9686"
+                },
+                {
+                    "code": "thames_initiative",
+                    "id": "Total dissolved nitrogen (mg N/L)"
+                }
+            ]
+        },
+        {
+            "name": "Nitrogen, Total Oxidised as N (mg/l)",
+            "color": "#1f78b4",
+            "description": "The sum of nitrate and nitrite species. Oxidised N is a key nutrient for algae and plants, but too much can cause harmful algal blooms.",
+            "datasets": [
+                {
+                    "code": "ea_water_quality",
+                    "id": "0116"
+                }
+            ]
+        },
+        {
+            "name": "Orthophosphate, reactive as P (mg/l)",
+            "color": "#ff7f00",
+            "description": "Phosphate (PO43-) is a plant nutrient ion and is found in sewage and fertiliser. High phosphate levels can cause harmful algal blooms.",
+            "datasets": [
+                {
+                    "code": "ea_water_quality",
+                    "id": "0180"
+                },
+                {
+                    "code": "freshwater_watch",
+                    "id": "chemical_phosphate"
+                },
+                {
+                    "code": "thames_initiative",
+                    "id": "Soluble reactive phosphorus (μg/L)"
+                }
+            ],
+            "thresholds": [
+                {
+                    "value": 0.05,
+                    "name": ">= 'Moderate' phosphate/orthophosphate threshold",
+                    "visible": "legendonly"
+                },
+                {
+                    "value": 0.1,
+                    "name": ">= 'Poor' phosphate/orthophosphate threshold",
+                    "visible": "legendonly"
+                }
+            ]
+        },
+        {
+            "name": "Oxygen, Dissolved, % Saturation (%)",
+            "color": "#e7298a",
+            "description": "Dissolved oxygen is essential for aquatic animals.",
+            "datasets": [
+                {
+                    "code": "ea_water_quality",
+                    "id": "9901"
+                },
+                {
+                    "code": "thames_initiative",
+                    "id": "% DO"
+                }
+            ],
+            "thresholds": [
+                {
+                    "value": 60,
+                    "name": "<= 'Moderate' DO% threshold",
+                    "visible": "legendonly"
+                },
+                {
+                    "value": 54,
+                    "name": "<= 'Poor' DO% threshold",
+                    "visible": "legendonly"
+                },
+                {
+                    "value": 45,
+                    "name": "<= 'Bad' DO% threshold",
+                    "visible": "legendonly"
+                }
+            ]
+        },
+        {
+            "name": "Oxygen, Dissolved as O2 (mg/l)",
+            "color": "#66a61e",
+            "description": "Dissolved oxygen is essential for aquatic animals.",
+            "datasets": [
+                {
+                    "code": "ea_water_quality",
+                    "id": "9924"
+                },
+                {
+                    "code": "ea_wq_sonde",
+                    "id": "dissolved-oxygen"
+                },
+                {
+                    "code": "thames_initiative",
+                    "id": "DO mg/L"
+                }
+            ]
+        },
+        {
+            "name": "pH (phunits)",
+            "color": "#6a3d9a",
+            "description": "River water is naturally close to neutral pH (6-8). Low or high pH (<5, > 10) is extremely harmful to aquatic life.",
+            "datasets": [
+                {
+                    "code": "ea_wq_sonde",
+                    "id": "ph"
+                },
+                {
+                    "code": "ea_water_quality",
+                    "id": "0061"
+                },
+                {
+                    "code": "thames_initiative",
+                    "id": "pH"
+                }
+            ],
+            "thresholds": [
+                {
+                    "value": 4.7,
+                    "name": "<= Poor pH threshold"
+                }
+            ]
+        },
+        {
+            "name": "Phosphorus, Total as P (mg/l)",
+            "color": "#404040",
+            "description": "Phosphorus is a plant nutrient that is found in sewage and fertiliser. High phosphorus levels can cause harmful algal blooms.",
+            "datasets": [
+                {
+                    "code": "ea_water_quality",
+                    "id": "0348"
+                },
+                {
+                    "code": "thames_initiative",
+                    "id": "Total phosphorus (ug/L)"
+                }
+            ]
+        },
+        {
+            "name": "Secchi Tube: Turbidity (NTU)",
+            "color": "royalblue",
+            "description": "Turbidity means how cloudy the water is. Higher turbidity means there are more particles in the water, which can reduce the light available for aquatic plants and harm fish.",
+            "datasets": [
+                {
+                    "code": "ea_wq_sonde",
+                    "id": "turbidity"
+                },
+                {
+                    "code": "freshwater_watch",
+                    "id": "optical_secchi_turbidity"
+                }
+            ],
+            "thresholds": [
+                {
+                    "value": 100,
+                    "name": ">= 'Poor' turbidity threshold",
+                    "visible": "legendonly"
+                }
+            ]
+        },
+        {
+            "name": "Silica, reactive as SiO2 (mg/l)",
+            "color": "#cab2d6",
+            "description": "Silica (SiO2) is a natural component of river water and is found in quartz and sand. Silica concentration is also affected by artificial inputs such as pesticides and cosmetic products.",
+            "datasets": [
+                {
+                    "code": "ea_water_quality",
+                    "id": "0182"
+                }
+            ]
+        },
+        {
+            "name": "Suspended solids (mg/l)",
+            "color": "royalblue",
+            "description": "The amount of solids suspended in the water. Higher suspended solids means there are more particles in the water, which can reduce the light available for aquatic plants and harm fish.",
+            "datasets": [
+                {
+                    "code": "thames_initiative",
+                    "id": "Suspended solids mg/L"
+                }
+            ]
+        },
+        {
+            "name": "Temperature of Water (cel)",
+            "color": "#1b9e77",
+            "description": "Temperatures > 23oC are harmful to aquatic life and can lead to harmful algal blooms.",
+            "datasets": [
+                {
+                    "code": "ea_water_quality",
+                    "id": "0076"
+                },
+                {
+                    "code": "ea_wq_sonde",
+                    "id": "temperature"
+                },
+                {
+                    "code": "thames_initiative",
+                    "id": "Temperature (C)"
+                }
+            ],
+            "thresholds": [
+                {
+                    "value": 28,
+                    "name": ">= 'Moderate' temperature threshold",
+                    "visible": "legendonly"
+                },
+                {
+                    "value": 30,
+                    "name": ">= 'Poor' temperature threshold",
+                    "visible": "legendonly"
+                }
+            ]
+        },
+        {
+            "name": "Water flow",
+            "color": "navy",
+            "description": "Flow of the river or stream.",
+            "datasets": [
+                {
+                    "code": "ea_lf_sonde",
+                    "id": "waterFlow"
+                }
+            ]
+        },
+        {
+            "name": "Water level",
+            "color": "purple",
+            "description": "Water level of the river or stream.",
+            "datasets": [
+                {
+                    "code": "ea_lf_sonde",
+                    "id": "waterLevel"
+                }
+            ]
+        }
+    ]
+}
