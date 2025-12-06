@@ -4,11 +4,11 @@ from src.oxrivers_api.client import OxfordRiversClient
 from src.oxrivers_api.loader import Loader
 
 
-class MyTestCase(unittest.TestCase):
+class TestLoader(unittest.TestCase):
     def test_load_datasets(self):
         client = OxfordRiversClient("./tests/data")
         client.getDatasets()
-        loader = Loader(client.storage)
+        loader = Loader(client)
         result = loader.load_datasets()
         self.assertListEqual(
             list(result.columns),
@@ -19,7 +19,7 @@ class MyTestCase(unittest.TestCase):
     def test_load_determinands(self):
         client = OxfordRiversClient("./tests/data")
         client.getDeterminands()
-        loader = Loader(client.storage)
+        loader = Loader(client)
         result = loader.load_determinands()
         self.assertListEqual(list(result.columns), ['name', 'description', 'datasets'])
         self.assertEqual(len(result), 29)
@@ -28,7 +28,7 @@ class MyTestCase(unittest.TestCase):
         datasetID = "fft"
         client = OxfordRiversClient("./tests/data")
         client.getSites(datasetID)
-        loader = Loader(client.storage)
+        loader = Loader(client)
         result = loader.load_sites(datasetID)
         self.assertListEqual(list(result.columns), ['geometry_coordinates', 'properties_id', 'properties_name', 'properties_threshold', 'properties_popserved', 'lon', 'lat'])
         self.assertEqual(len(result), 17)
@@ -38,11 +38,23 @@ class MyTestCase(unittest.TestCase):
         siteID = "Oxford"
         client = OxfordRiversClient("./tests/data")
         client.getTimeseries(datasetID, siteID)
-        loader = Loader(client.storage)
+        loader = Loader(client)
         result = loader.load_timeseries(datasetID, siteID)
         self.assertListEqual(list(result.columns),
                              ['datetime', 'value', 'id', 'siteID', 'endPoint', 'determinand', 'determinand_label', 'determinand_unit'])
         self.assertEqual(len(result), 35040)
+
+    # def test_load_data_for_date(self):
+        # datasetID = "rainfall"
+        # date = "2024-07-31"
+        # client = OxfordRiversClient("./tests/data")
+        # loader = Loader(client)
+        # result = loader.load_data_for_date(datasetID, date)
+        # print(list(result.columns))
+        # print(len(result))
+        # self.assertListEqual(list(result.columns),
+        #                      ['datetime', 'value', 'id', 'siteID', 'endPoint', 'determinand', 'determinand_label', 'determinand_unit'])
+        # self.assertEqual(len(result), 35040)
 
     def test_load_timeseries_determinand(self):
         datasetID = "ea_wq_sonde"
@@ -50,7 +62,7 @@ class MyTestCase(unittest.TestCase):
         determinand = "fdom"
         client = OxfordRiversClient("./tests/data")
         client.getTimeseriesDeterminand(datasetID, siteID, determinand)
-        loader = Loader(client.storage)
+        loader = Loader(client)
         result = loader.load_timeseries_determinand(datasetID, siteID, determinand)
         self.assertListEqual(list(result.columns),
                              ['datetime', 'value', 'id', 'siteID', 'endPoint', 'determinand', 'determinand_label', 'determinand_unit'])
