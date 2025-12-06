@@ -50,7 +50,8 @@ class Loader:
     # Load DataForDate → DataFrame
     # -------------------------
     def load_data_for_date(self, datasetID: str, date: str) -> pd.DataFrame:
-        raw = self.client.getDataForDate(datasetID, date)
+        with open(self.client.getDataForDate(datasetID, date), "r") as f:
+            raw = json.load(f)
         df = pd.DataFrame(raw.get("data", []))
 
         if 'datetime' in df.columns:

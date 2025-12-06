@@ -44,17 +44,16 @@ class TestLoader(unittest.TestCase):
                              ['datetime', 'value', 'id', 'siteID', 'endPoint', 'determinand', 'determinand_label', 'determinand_unit'])
         self.assertEqual(len(result), 35040)
 
-    # def test_load_data_for_date(self):
-        # datasetID = "rainfall"
-        # date = "2024-07-31"
-        # client = OxfordRiversClient("./tests/data")
-        # loader = Loader(client)
-        # result = loader.load_data_for_date(datasetID, date)
-        # print(list(result.columns))
-        # print(len(result))
-        # self.assertListEqual(list(result.columns),
-        #                      ['datetime', 'value', 'id', 'siteID', 'endPoint', 'determinand', 'determinand_label', 'determinand_unit'])
-        # self.assertEqual(len(result), 35040)
+    def test_load_data_for_date(self):
+        datasetID = "rainfall"
+        date = "2024-07-31"
+        client = OxfordRiversClient("./tests/data")
+        loader = Loader(client)
+        result = loader.load_data_for_date(datasetID, date)
+        print(list(result.columns))
+        print(len(result))
+        self.assertListEqual(list(result.columns),['datetime', 'value', 'id'])
+        self.assertEqual(len(result), 129)
 
     def test_load_timeseries_determinand(self):
         datasetID = "ea_wq_sonde"
