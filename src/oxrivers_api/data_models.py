@@ -37,10 +37,10 @@ class Geometry(BaseModel):
 
 
 class SiteProperties(BaseModel):
-    id: str
+    id: str|int
     name: str
-    threshold: float
-    popserved: int
+    threshold: Optional[float] = None
+    popserved: Optional[int] = None
 
 
 class Site(BaseModel):
