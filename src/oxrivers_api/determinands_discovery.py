@@ -1,6 +1,5 @@
 import pandas as pd
 
-from src.oxrivers_api.client import OxfordRiversClient
 from src.oxrivers_api.loader import Loader
 
 
