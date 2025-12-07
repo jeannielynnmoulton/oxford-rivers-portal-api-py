@@ -8,6 +8,7 @@ requests = "*"
 pandas = "*"
 numpy = "*"
 pydantic = "*"
+shapely = "*"
 
 [dev-packages]
 pytest = "*"
