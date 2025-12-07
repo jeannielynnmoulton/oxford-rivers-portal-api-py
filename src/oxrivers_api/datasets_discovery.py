@@ -25,7 +25,7 @@ class DatasetsDiscovery:
         return columns
 
     def get_datasets_with_timeseries(self):
-        result = self.datasets.loc[self.datasets["metadata_graph"] == True]
+        result = self.datasets[self.datasets["metadata_graph"] == True]
         print(result)
         return result
 
@@ -39,21 +39,12 @@ class DatasetsDiscovery:
         print(result)
         return result
 
-    def get_datasets_with_sites(self):
-        # data sets with sites taken from gov aqua website
-        sites = ["ea_bathing_water", "edm", 'rainfall', "fft", "ea_water_quality", "ea_lf_sonde", "ea_wq_sonde",
-                 "freshwater_watch", "ea_flood_warnings"]
-        result = self.datasets[self.datasets["id"].isin(sites)]
-        print(result)
-        return result
-
-# if __name__ == '__main__':
-#     client = OxfordRiversClient("../../data")
-#     loader = Loader(client)
-#     discovery = DatasetsDiscovery(loader)
-#     discovery.get_ids()
-#     discovery.get_columns()
-#     discovery.get_datasets_with_timeseries()
-#     discovery.get_datasets_with_data_for_date()
-#     discovery.get_datasets_info()
-#     discovery.get_datasets_with_sites()
+if __name__ == '__main__':
+    client = OxfordRiversClient("../../data")
+    loader = Loader(client)
+    discovery = DatasetsDiscovery(loader)
+    discovery.get_ids()
+    discovery.get_columns()
+    discovery.get_datasets_with_timeseries()
+    discovery.get_datasets_with_data_for_date()
+    discovery.get_datasets_info()
