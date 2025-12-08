@@ -4,9 +4,8 @@ from pathlib import Path
 import pandas as pd
 
 from src.oxrivers_api.client import OxfordRiversClient
-from src.oxrivers_api.data_models import Dataset, Determinand, Site, Timeseries
-from src.oxrivers_api.endpoints import Endpoint
-from src.oxrivers_api.storage import Storage
+from src.oxrivers_api.data_models import Determinand, Site, Timeseries
+from src.oxrivers_api.request_models import Request, DatasetRequest
 
 
 class Loader:
@@ -16,12 +15,18 @@ class Loader:
     def __init__(self, client: OxfordRiversClient):
         self.client = client
 
-    def load_datasets(self) -> pd.DataFrame:
-        with open(self.client.getDatasets(), "r") as f:
+    def load(self, parameter: Request):
+        return parameter.as_pandas(self)
+
+    def base_load(self, parameter: Request):
+        with open(parameter.request(self.client), "r") as f:
             data = json.load(f)
-        datasets = [Dataset(**d) for d in data]
+        datasets = [parameter.data_model(**d) for d in data]
         dicts = [d.model_dump() for d in datasets]
         return pd.json_normalize(dicts, sep='_')
+
+    def load_datasets(self) -> pd.DataFrame:
+        return self.base_load(DatasetRequest())
 
     def load_determinands(self) -> pd.DataFrame:
         with open(self.client.getDeterminands(), "r") as f:

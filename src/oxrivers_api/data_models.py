@@ -2,12 +2,10 @@ from pydantic import BaseModel, Field, field_validator, RootModel
 from typing import List, Optional, Dict, Any, Union
 from datetime import datetime, date
 
-from src.oxrivers_api.endpoints import Endpoint
-
-
 # -------------------------
 # Dataset
 # -------------------------
+
 class DatasetMetadata(BaseModel):
     name: str
     graph: bool
@@ -19,6 +17,9 @@ class Dataset(BaseModel):
     group: str
     type: str
     metadata: DatasetMetadata
+
+class Datasets(BaseModel):
+    datasets: List[Dataset]
 
 # -------------------------
 # Determinand

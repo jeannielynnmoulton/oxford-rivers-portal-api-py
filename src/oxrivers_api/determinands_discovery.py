@@ -1,3 +1,5 @@
+import logging
+
 import pandas as pd
 
 from src.oxrivers_api.loader import Loader
@@ -14,18 +16,17 @@ class DeterminandsDiscovery:
 
     def get_ids(self):
         ids = list(self.determinands["name"])
-        print(ids)
+        logging.info(ids)
         return ids
 
     def get_columns(self):
         columns = list(self.determinands.columns)
-        print(self.determinands.columns)
-        print(columns)
+        logging.info(columns)
         return columns
 
     def get_determinands_info(self):
         result = self.determinands[["name", "description"]]
-        print(result)
+        logging.info(result)
         return result
 
     def get_datasets_with_determinand(self, determinand: str):
@@ -38,15 +39,5 @@ class DeterminandsDiscovery:
                 .reset_index(drop=True)
         )
         result.columns = ["dataset", "id"]
-        print(result)
+        logging.info(result)
         return result
-
-# if __name__ == '__main__':
-#     client = OxfordRiversClient("../../data")
-#     loader = Loader(client)
-#     discovery = DeterminandsDiscovery(loader)
-#     print(discovery.determinands)
-#     discovery.get_ids()
-#     discovery.get_columns()
-#     discovery.get_determinands_info()
-#     discovery.get_datasets_with_determinand("Escherichia coli (EC)")

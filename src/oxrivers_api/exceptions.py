@@ -9,3 +9,6 @@ class InvalidDateFormat(Exception):
 
 class ClientRequestError(Exception):
     pass
+
+class LoaderError(Exception):
+    pass

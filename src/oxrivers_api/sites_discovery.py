@@ -1,9 +1,7 @@
-import pandas as pd
-import shapely
-from shapely import Point
+import logging
 
-from src.oxrivers_api.client import OxfordRiversClient
-from src.oxrivers_api.datasets_discovery import DatasetsDiscovery
+import pandas as pd
+from shapely import Point
 from src.oxrivers_api.loader import Loader
 import geopandas as gpd
 
@@ -25,18 +23,18 @@ class SitesDiscovery:
 
     def get_ids(self):
         ids = self.sites["id"]
-        print(ids)
+        logging.info(ids)
         return ids
 
     def get_columns(self):
         columns = list(self.sites.columns)
-        print(self.sites.columns)
-        print(columns)
+        logging.info(self.sites.columns)
+        logging.info(columns)
         return columns
 
     def get_sites_info(self):
         result = self.sites[["properties_id", "properties_name"]]
-        print(result)
+        logging.info(result)
         return result
 
     def get_closest_sites_to(self, lon_lat: tuple[float, float] , num: int=10):
@@ -56,19 +54,3 @@ class SitesDiscovery:
         return_columns = self.get_columns()
         return_columns.append(distance_col)
         return gdf_sites.sort_values(distance_col)[return_columns].head(num)
-
-if __name__ == '__main__':
-    client = OxfordRiversClient("../../data")
-    loader = Loader(client)
-    dataset_discovery = DatasetsDiscovery(loader)
-    datasets = dataset_discovery.get_ids()
-    site_discovery_list = []
-
-    for datasetID in datasets:
-        # print(datasetID)
-        site_discovery = SitesDiscovery(loader, datasetID)
-        site_discovery.get_columns()
-        print(site_discovery.get_closest_sites_to((-0.55, 51.4)).to_string())
-        # info = site_discovery.get_sites_info()
-        # site_discovery_list.append(info)
-        # print(info.to_string())
