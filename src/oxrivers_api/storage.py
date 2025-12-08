@@ -2,8 +2,8 @@ import json
 import logging
 from pathlib import Path
 
-from src.oxrivers_api.endpoints import Endpoint
-from src.oxrivers_api.exceptions import StorageException, MissingParameterException
+from src.oxrivers_api.exceptions import MissingParameterException
+from src.oxrivers_api.request_models import Request
 
 
 class Storage:
@@ -33,29 +33,29 @@ class Storage:
     def get_data_folder_location(self) -> Path:
         return self.data_dir
 
-    def create_endpoint_folder(self, endpoint: Endpoint) -> Path:
+    def create_endpoint_folder(self, request: Request) -> Path:
         self.create_data_folder()
-        endpoint_folder = Path(self.data_dir) / endpoint.value.json_folder
+        endpoint_folder = Path(self.data_dir) / request.json_storage_folder
         self.create_folder(endpoint_folder)
         logging.debug(f"Endpoint storage directory created at {endpoint_folder}")
         return endpoint_folder
 
-    def get_endpoint_json_filepath(self, endpoint, **kwargs):
-        for required_info in endpoint.value.required_url_info:
+    def get_endpoint_json_filepath(self, request: Request, **kwargs):
+        for required_info in request.fields:
             try:
                 kwargs[required_info]
             except:
-                raise MissingParameterException(f"Error building file for \'{endpoint.value.url_endpoint}\'. Missing parameter \'{required_info}\'.")
-        endpoint_file_path = self.create_endpoint_folder(endpoint)
-        path_suffix = endpoint.value.json_folder
+                raise MissingParameterException(f"Error building file for \'{request.url_endpoint}\'. Missing parameter \'{required_info}\'.")
+        endpoint_file_path = self.create_endpoint_folder(request)
+        path_suffix = request.json_storage_folder
         for i, (info, value) in enumerate(kwargs.items()):
             path_suffix += "_"
             path_suffix += value
         path_suffix += ".json"
         return endpoint_file_path / path_suffix
 
-    def json_file_exists(self, endpoint, **kwargs):
-        return self.get_endpoint_json_filepath(endpoint, **kwargs).exists()
+    def json_file_exists(self, request: Request, **kwargs):
+        return self.get_endpoint_json_filepath(request, **kwargs).exists()
 
     def write(self, response, filepath: Path):
         with open(filepath, 'w', encoding='utf-8') as f:

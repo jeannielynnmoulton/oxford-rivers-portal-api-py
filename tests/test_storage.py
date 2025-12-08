@@ -2,7 +2,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from src.oxrivers_api.endpoints import Endpoint
+from src.oxrivers_api.request_models import DatasetRequest, DeterminandRequest, SitesRequest, DataForDateRequest, \
+    TimeseriesRequest
 from src.oxrivers_api.storage import Storage
 
 
@@ -27,14 +28,13 @@ class TestStorage(unittest.TestCase):
         storage = Storage(Path(data_dir).resolve())
         self.assertEqual(storage.get_data_folder_location(), Path(data_dir).resolve())
 
-    def test_endpoint_folders(self):
-        for endpoint in Endpoint:
-            data_dir: Path = Path(self.tmpdir) / "data"
-            storage = Storage(Path(data_dir).resolve())
-            endpoint_folder = storage.create_endpoint_folder(endpoint)
-            self.assertEqual(endpoint_folder, Path(data_dir).resolve() / endpoint.value.json_folder)
-
-
+    def test_dataset_request_storage(self):
+        data_dir = Path(self.tmpdir) / "data"
+        storage = Storage(Path(data_dir).resolve())
+        requests = [DatasetRequest(), DeterminandRequest(), SitesRequest("dataset"), DataForDateRequest("site", "2025-05-05"), TimeseriesRequest("dataset", "site"), TimeseriesRequest("dataset", "site", "determinand")]
+        for request in requests:
+            endpoint_folder = storage.create_endpoint_folder(request)
+            self.assertEqual(endpoint_folder, Path(data_dir).resolve() / request.json_storage_folder)
 
 if __name__ == '__main__':
     unittest.main()
