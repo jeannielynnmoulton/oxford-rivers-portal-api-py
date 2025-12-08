@@ -1,5 +1,6 @@
 import json
 import logging
+from dataclasses import fields
 from pathlib import Path
 
 from src.oxrivers_api.exceptions import MissingParameterException
@@ -40,17 +41,12 @@ class Storage:
         logging.debug(f"Endpoint storage directory created at {endpoint_folder}")
         return endpoint_folder
 
-    def get_endpoint_json_filepath(self, request: Request, **kwargs):
-        for required_info in request.fields:
-            try:
-                kwargs[required_info]
-            except:
-                raise MissingParameterException(f"Error building file for \'{request.url_endpoint}\'. Missing parameter \'{required_info}\'.")
+    def get_endpoint_json_filepath(self, request: Request):
         endpoint_file_path = self.create_endpoint_folder(request)
         path_suffix = request.json_storage_folder
-        for i, (info, value) in enumerate(kwargs.items()):
-            path_suffix += "_"
-            path_suffix += value
+        for i, f in enumerate(fields(request.request_info)):
+            value = getattr(request.request_info, f.name)
+            path_suffix += "_" + str(value)
         path_suffix += ".json"
         return endpoint_file_path / path_suffix
 

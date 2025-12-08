@@ -1,9 +1,11 @@
 import datetime
+from dataclasses import fields
 
 import requests
 
-from src.oxrivers_api.endpoints import Endpoint
-from src.oxrivers_api.exceptions import MissingParameterException, InvalidDateFormat, ClientRequestError
+from src.oxrivers_api.exceptions import InvalidDateFormat, ClientRequestError
+from src.oxrivers_api.request_models import DatasetRequest, DeterminandRequest, SitesRequest, DataForDateRequest, \
+    TimeseriesRequest, DataForDateInfo, TimeseriesInfo, SitesInfo, Request
 from src.oxrivers_api.storage import Storage
 
 class OxfordRiversClient:
@@ -27,22 +29,17 @@ class OxfordRiversClient:
 
 
     @staticmethod
-    def build_url(endpoint: Endpoint, **kwargs):
-        url = OxfordRiversClient.BASE_URL + endpoint.value.url_endpoint
-        infos = []
-        for required_info in endpoint.value.required_url_info:
-            try:
-                infos.append((required_info, kwargs[required_info]))
-            except:
-                raise MissingParameterException(f"Error building url for \'{endpoint.value.url_endpoint}\'. Missing parameter \'{required_info}\'.")
-        if len(infos) == 0:
+    def build_url(request: Request):
+        url = OxfordRiversClient.BASE_URL + request.url_endpoint
+        request_info = fields(request.request_info)
+        if len(request_info) == 0:
             return url
-        url = url + "?"
-        for i, info,  in enumerate(infos):
-            url = url + info[0]+"="+info[1]
-            if i < len(infos)-1:
-                url = url + "&"
-        return url
+        parameter_elements = []
+        for i, info in enumerate(request_info):
+            if info.name is None or getattr(request.request_info, info.name) is None:
+                continue
+            parameter_elements.append(info.name+"="+getattr(request.request_info, info.name))
+        return url + "?" + "&".join(parameter_elements)
 
     def request(self, url):
         try:
@@ -52,46 +49,46 @@ class OxfordRiversClient:
             raise ClientRequestError(e)
 
     def getDatasets(self):
-        endpoint = Endpoint.DATASETS
-        filepath = self.storage.get_endpoint_json_filepath(endpoint)
-        if not self.storage.json_file_exists(endpoint):
-            self.storage.write(self.request(OxfordRiversClient.build_url(endpoint)), filepath)
+        request = DatasetRequest()
+        filepath = self.storage.get_endpoint_json_filepath(request)
+        if not self.storage.json_file_exists(request):
+            self.storage.write(self.request(OxfordRiversClient.build_url(request)), filepath)
         return filepath
 
     def getDeterminands(self):
-        endpoint = Endpoint.DETERMINANDS
-        filepath = self.storage.get_endpoint_json_filepath(endpoint)
-        if not self.storage.json_file_exists(endpoint):
-            self.storage.write(self.request(OxfordRiversClient.build_url(endpoint)), filepath)
+        request = DeterminandRequest()
+        filepath = self.storage.get_endpoint_json_filepath(request)
+        if not self.storage.json_file_exists(request):
+            self.storage.write(self.request(OxfordRiversClient.build_url(request)), filepath)
         return filepath
 
     def getSites(self, datasetID: str):
-        endpoint = Endpoint.SITES
-        filepath = self.storage.get_endpoint_json_filepath(endpoint, datasetID=datasetID)
-        if not self.storage.json_file_exists(endpoint, datasetID=datasetID):
-            self.storage.write(self.request(OxfordRiversClient.build_url(endpoint, datasetID=datasetID)), filepath)
+        request = SitesRequest(SitesInfo(datasetID))
+        filepath = self.storage.get_endpoint_json_filepath(request)
+        if not self.storage.json_file_exists(request):
+            self.storage.write(self.request(OxfordRiversClient.build_url(request)), filepath)
         return filepath
 
     def getDataForDate(self, datasetID: str, date: str):
         OxfordRiversClient.checkDateFormat(date)
-        endpoint = Endpoint.DATES
-        filepath = self.storage.get_endpoint_json_filepath(endpoint, datasetID=datasetID, date=date)
-        if not self.storage.json_file_exists(endpoint, datasetID=datasetID, date=date):
-            self.storage.write(self.request(OxfordRiversClient.build_url(endpoint, datasetID=datasetID, date=date)), filepath)
+        request = DataForDateRequest(DataForDateInfo(datasetID, date))
+        filepath = self.storage.get_endpoint_json_filepath(request)
+        if not self.storage.json_file_exists(request):
+            self.storage.write(self.request(OxfordRiversClient.build_url(request)), filepath)
         return filepath
 
     def getTimeseries(self, datasetID: str, siteID: str):
-        endpoint = Endpoint.TIMESERIES
-        filepath = self.storage.get_endpoint_json_filepath(endpoint, datasetID=datasetID, siteID=siteID)
-        if not self.storage.json_file_exists(endpoint, datasetID=datasetID, siteID=siteID):
-            self.storage.write(self.request(OxfordRiversClient.build_url(endpoint, datasetID=datasetID, siteID=siteID)), filepath)
+        request = TimeseriesRequest(TimeseriesInfo(datasetID, siteID))
+        filepath = self.storage.get_endpoint_json_filepath(request)
+        if not self.storage.json_file_exists(request):
+            self.storage.write(self.request(OxfordRiversClient.build_url(request)), filepath)
         return filepath
 
     def getTimeseriesDeterminand(self, datasetID: str, siteID: str, determinand: str):
-        endpoint = Endpoint.TIMESERIES_DETERMINAND
-        filepath = self.storage.get_endpoint_json_filepath(endpoint, datasetID=datasetID, siteID=siteID, determinand=determinand)
-        if not self.storage.json_file_exists(endpoint, datasetID=datasetID, siteID=siteID, determinand=determinand):
-            self.storage.write(self.request(OxfordRiversClient.build_url(endpoint, datasetID=datasetID, siteID=siteID, determinand=determinand)), filepath)
+        request = TimeseriesRequest(TimeseriesInfo(datasetID, siteID, determinand))
+        filepath = self.storage.get_endpoint_json_filepath(request)
+        if not self.storage.json_file_exists(request):
+            self.storage.write(self.request(OxfordRiversClient.build_url(request)), filepath)
         return filepath
 
 
