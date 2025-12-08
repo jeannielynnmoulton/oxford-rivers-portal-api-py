@@ -64,12 +64,28 @@ class Loader:
     # -------------------------
     # Load Timeseries → DataFrame
     # -------------------------
+    def dict_to_list(self, d: dict[str, dict[str, dict]]) -> list:
+        result = []
+        columns = list(d.keys())
+        # assume all inner dicts share the same index keys
+        indices = list(d[columns[0]].keys())
+        for index in indices:
+            row = {}
+            for column in columns:
+                row[column] = d[column].get(index)
+            result.append(row)
+        return result
+
     def load_timeseries_base(self, json_file: Path) -> pd.DataFrame:
         with open(json_file, "r") as f:
             raw = json.load(f)
         ts = Timeseries(**raw)
-        df = pd.json_normalize([p.model_dump() for p in ts.data])
-        df.rename(columns={"timestamp": "datetime"}, inplace=True)
+        if type(ts.data) is list:
+            df = pd.json_normalize([p.model_dump() for p in ts.data])
+            df.rename(columns={"timestamp": "datetime"}, inplace=True)
+        else:
+            df = pd.json_normalize(self.dict_to_list(ts.data.root))
+            df.rename(columns={"sample date time": "datetime"}, inplace=True)
         for key, value in ts.metadata.model_dump().items():
             df[key] = value
         df["datetime"] = pd.to_datetime(df["datetime"])

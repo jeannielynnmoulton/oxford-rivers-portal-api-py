@@ -1,7 +1,5 @@
 import unittest
-import urllib
 
-from src.demo import client
 from src.oxrivers_api.client import OxfordRiversClient
 from src.oxrivers_api.endpoints import Endpoint
 from src.oxrivers_api.exceptions import MissingParameterException, InvalidDateFormat

@@ -1,6 +1,9 @@
-from pydantic import BaseModel, Field, field_validator
-from typing import List, Optional
+from pydantic import BaseModel, Field, field_validator, RootModel
+from typing import List, Optional, Dict, Any, Union
 from datetime import datetime, date
+
+from src.oxrivers_api.endpoints import Endpoint
+
 
 # -------------------------
 # Dataset
@@ -63,6 +66,7 @@ class DataForDate(BaseModel):
 # -------------------------
 # Timeseries
 # -------------------------
+
 class TimeseriesMetadata(BaseModel):
     id: str
     siteID: str
@@ -71,10 +75,10 @@ class TimeseriesMetadata(BaseModel):
     determinand_label: Optional[str] = None
     determinand_unit: Optional[str] = None
 
-
 class TimeseriesPoint(BaseModel):
-    timestamp: datetime = Field(..., alias="datetime")
-    value: Optional[float]
+    datetime: datetime
+    value: Optional[float] = None
+    qualifier: Optional[str] = None
 
     @field_validator("value", mode="before")
     def parse_value(cls, v):
@@ -85,12 +89,20 @@ class TimeseriesPoint(BaseModel):
         except (ValueError, TypeError):
             return None
 
+class TimeseriesDict(RootModel[Dict[str, Dict[str, Any]]]):
+    pass
+
+
+TimeseriesData = Union[
+    List[TimeseriesPoint],
+    TimeseriesDict
+]
 
 class Timeseries(BaseModel):
     metadata: TimeseriesMetadata
-    data: List[TimeseriesPoint]
+    data: TimeseriesData
 
-    model_config = {
-        "populate_by_name": True,  # allow using field names even if there are aliases
-        "extra": "ignore"          # ignore fields not defined in the model
-    }
+    # model_config = {
+    #     "populate_by_name": True,  # allow using field names even if there are aliases
+    #     "extra": "ignore"          # ignore fields not defined in the model
+    # }

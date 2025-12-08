@@ -41,7 +41,7 @@ class TestLoader(unittest.TestCase):
         loader = Loader(client)
         result = loader.load_timeseries(datasetID, siteID)
         self.assertListEqual(list(result.columns),
-                             ['datetime', 'value', 'id', 'siteID', 'endPoint', 'determinand', 'determinand_label', 'determinand_unit'])
+                             ['datetime', 'value', 'qualifier', 'id', 'siteID', 'endPoint', 'determinand', 'determinand_label', 'determinand_unit'])
         self.assertEqual(len(result), 35040)
 
     def test_load_data_for_date(self):
@@ -64,8 +64,23 @@ class TestLoader(unittest.TestCase):
         loader = Loader(client)
         result = loader.load_timeseries_determinand(datasetID, siteID, determinand)
         self.assertListEqual(list(result.columns),
-                             ['datetime', 'value', 'id', 'siteID', 'endPoint', 'determinand', 'determinand_label', 'determinand_unit'])
+                             ['datetime', 'value', 'qualifier', 'id', 'siteID', 'endPoint', 'determinand', 'determinand_label', 'determinand_unit'])
         self.assertEqual(len(result), 3683)
+
+    def test_load_timeseries_determinand_dict(self):
+        datasetID = "ea_bathing_water"
+        siteID = "11946"
+        determinand = "EC"
+        client = OxfordRiversClient("./tests/data")
+        client.getTimeseriesDeterminand(datasetID, siteID, determinand)
+        loader = Loader(client)
+        result = loader.load_timeseries_determinand(datasetID, siteID, determinand)
+        self.assertListEqual(list(result.columns),
+                             ['datetime', 'record date', 'escherichia coli count',
+                              'escherichia coli qualifier', 'intestinal enterococci count',
+                              'intestinal enterococci qualifier', 'id', 'siteID', 'endPoint',
+                              'determinand', 'determinand_label', 'determinand_unit'])
+        self.assertEqual(len(result), 78)
 
 
 if __name__ == '__main__':
