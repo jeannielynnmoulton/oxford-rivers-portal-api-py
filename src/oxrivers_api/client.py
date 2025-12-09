@@ -77,14 +77,7 @@ class OxfordRiversClient:
             self.storage.write(self.request(OxfordRiversClient.build_url(request)), filepath)
         return filepath
 
-    def getTimeseries(self, datasetID: str, siteID: str):
-        request = TimeseriesRequest(TimeseriesInfo(datasetID, siteID))
-        filepath = self.storage.get_endpoint_json_filepath(request)
-        if not self.storage.json_file_exists(request):
-            self.storage.write(self.request(OxfordRiversClient.build_url(request)), filepath)
-        return filepath
-
-    def getTimeseriesDeterminand(self, datasetID: str, siteID: str, determinand: str):
+    def getTimeseries(self, datasetID: str, siteID: str, determinand: str = None):
         request = TimeseriesRequest(TimeseriesInfo(datasetID, siteID, determinand))
         filepath = self.storage.get_endpoint_json_filepath(request)
         if not self.storage.json_file_exists(request):

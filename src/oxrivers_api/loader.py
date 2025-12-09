@@ -96,7 +96,4 @@ class Loader:
         return df
 
     def load_timeseries(self, info: TimeseriesInfo) -> pd.DataFrame:
-        if info.determinand is None:
-            return self.load_timeseries_base(self.client.getTimeseries(info.datasetID, info.siteID))
-        else:
-            return self.load_timeseries_base(self.client.getTimeseriesDeterminand(info.datasetID, info.siteID, info.determinand))
+        return self.load_timeseries_base(self.client.getTimeseries(info.datasetID, info.siteID, info.determinand))

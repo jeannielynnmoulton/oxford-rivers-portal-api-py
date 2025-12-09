@@ -6,7 +6,7 @@ from src.oxrivers_api.request_models import DatasetRequest, DatasetsInfo, Determ
     DataForDateRequest, DataForDateInfo, TimeseriesRequest, TimeseriesInfo
 
 
-class MyTestCase(unittest.TestCase):
+class TestClient(unittest.TestCase):
     def test_build_url_datasets(self):
         url = OxfordRiversClient.build_url(DatasetRequest())
         self.assertEqual(url, "https://oxfordrivers.ceh.ac.uk/getDatasets")
@@ -62,7 +62,7 @@ class MyTestCase(unittest.TestCase):
 
     def test_getTimeseriesDeterminand(self):
         client = OxfordRiversClient("./data")
-        client.getTimeseriesDeterminand("ea_wq_sonde", "E01612A", "fdom")
+        client.getTimeseries("ea_wq_sonde", "E01612A", "fdom")
 
 
 if __name__ == '__main__':
