@@ -57,30 +57,32 @@ data_dir = Path("../data")
 storage = LocalJsonStorage(data_dir)
 client = APIToJson(storage)
 loader = JsonToPandasLoader(client)
-time_series_info = TimeseriesInfo("fft", "Oxford")
+time_series_info = TimeseriesInfo("fft", "Oxford") # holds required request parameters
 df = loader.load_timeseries(time_series_info)
 print(df.head(10))
-# or you can do this directly from the TimeseriesInfo object
+
+# Though it is nicer to do it from the TimeseriesInfo object like this
+# which effectively called loader.load_timeseries(time_series_info)
 df2 = time_series_info.request().as_pandas(loader)
 print(df2.head(10))
 ```
 API calls are only made when there is no local json file, so it is efficient to use the client/loader to make repeated calls.
 
 The endpoints and their corresponding info objects are defined in `models/request_models.py`
-getDatasets -> DatasetsInfo
-getDeterminands -> DeterminandsInfo
-getSites -> SitesInfo
-getTimeseries -> TimeseriesInfo
-getDataForDate -> DataForDateInfo
+| Endpoint        | RequestInfo      | Example Usage                                |
+| --------------- | ---------------- | -------------------------------------------- |
+| getDatasets     | DatasetsInfo     | `DatasetsInfo().request().as_pandas(loader)` |
+| getDeterminands | DeterminandsInfo | `DeterminandsInfo().request().as_pandas(loader)`                                    |
+| getSites        | SitesInfo        | `SitesInfo("edm).request().as_pandas(loader)`                                    |
+| getTimeseries   | TimeseriesInfo   | `TimeseriesInfo("fft", "Oxford").request().as_pandas(loader)`                                    |
+| getDataForDate  | DataForDateInfo  | `DataForDateInfo("rainfall", "2022-05-05").request().as_pandas(loader)`                                    |
 
-These can be used to call `.request().as_pandas()` as in the demo code above,
 which will make a request to the API and store is as pandas in one line.
 
 ### Experimental: The data cache
 The data cache is helper that will allow you to store requests as pandas
 in a dictionary-like way. The most helpful part is that the keys of the dictionary
-are descriptive, even if the ids of the sites and determinands are numbers, because
-the default key maps the id to a name first.
+are descriptive by default (English text instead of ID numbers), or you can provide your own.
 
 ```python
 import pandas as pd
