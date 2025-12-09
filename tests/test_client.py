@@ -1,11 +1,11 @@
 import unittest
 from pathlib import Path
 
-from src.oxrivers_api.api_to_json_client import APIToJson
-from src.oxrivers_api.errors.exceptions import InvalidDateFormat
-from src.oxrivers_api.models.request_models import DatasetsRequest, DeterminandsRequest, SitesInfo, \
+from oxrivers_api.api_to_json_client import APIToJson
+from oxrivers_api.errors.exceptions import InvalidDateFormat
+from oxrivers_api.models.request_models import DatasetsRequest, DeterminandsRequest, SitesInfo, \
     DataForDateInfo, TimeseriesInfo
-from src.oxrivers_api.storage.json_storage import LocalJsonStorage
+from oxrivers_api.storage.json_storage import LocalJsonStorage
 
 
 class TestClient(unittest.TestCase):

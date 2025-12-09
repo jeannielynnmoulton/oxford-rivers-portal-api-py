@@ -3,9 +3,9 @@ from dataclasses import fields
 
 import requests
 
-from src.oxrivers_api.errors.exceptions import InvalidDateFormat, ClientRequestError
-from src.oxrivers_api.models.request_models import DatasetsRequest, DeterminandsRequest, DataForDateInfo, TimeseriesInfo, SitesInfo, Request
-from src.oxrivers_api.storage.json_storage import AbstractStorage
+from oxrivers_api.errors.exceptions import InvalidDateFormat, ClientRequestError
+from oxrivers_api.models.request_models import DatasetsRequest, DeterminandsRequest, DataForDateInfo, TimeseriesInfo, SitesInfo, Request
+from oxrivers_api.storage.json_storage import AbstractStorage
 
 
 class APIToJson:

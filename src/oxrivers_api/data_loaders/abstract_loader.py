@@ -1,6 +1,6 @@
 import pandas as pd
 
-from src.oxrivers_api.models.request_models import SitesInfo, TimeseriesInfo, DataForDateInfo, Request
+from oxrivers_api.models.request_models import SitesInfo, TimeseriesInfo, DataForDateInfo, Request
 
 
 class AbstractLoader:

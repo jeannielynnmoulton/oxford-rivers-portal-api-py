@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from src.oxrivers_api.models.request_models import Request
+from oxrivers_api.models.request_models import Request
 
 
 class AbstractStorage:

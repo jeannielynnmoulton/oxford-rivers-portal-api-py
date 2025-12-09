@@ -1,7 +1,7 @@
 import pandas as pd
 
-from src.oxrivers_api.data_loaders.json_to_pandas_loader import JsonToPandasLoader
-from src.oxrivers_api.models.request_models import TimeseriesInfo, DataForDateInfo, RequestInfo, SitesInfo, SitesRequest, DatasetsRequest, DeterminandsRequest
+from oxrivers_api.data_loaders.json_to_pandas_loader import JsonToPandasLoader
+from oxrivers_api.models.request_models import TimeseriesInfo, DataForDateInfo, RequestInfo, SitesInfo, SitesRequest, DatasetsRequest, DeterminandsRequest
 
 class DataCache:
     """A utility wrapper are the json_to_pandas loader.
