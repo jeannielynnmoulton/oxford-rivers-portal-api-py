@@ -1,12 +1,16 @@
 import unittest
+from pathlib import Path
 
 from src.oxrivers_api.api_to_json import APIToJson
 from src.oxrivers_api.errors.exceptions import InvalidDateFormat
 from src.oxrivers_api.models.request_models import DatasetRequest, DeterminandRequest, SitesInfo, \
     DataForDateInfo, TimeseriesInfo
+from src.oxrivers_api.storage.json_storage import LocalJsonStorage
 
 
 class TestClient(unittest.TestCase):
+    storage = LocalJsonStorage(Path("./data"))
+
     def test_build_url_datasets(self):
         url = APIToJson.build_url(DatasetRequest())
         self.assertEqual(url, "https://oxfordrivers.ceh.ac.uk/getDatasets")
@@ -41,27 +45,27 @@ class TestClient(unittest.TestCase):
         self.assertEqual(url, "https://oxfordrivers.ceh.ac.uk/getTimeseries?datasetID=ea_bathing_water&siteID=EA1234&determinand=EC")
 
     def test_getDatasets(self):
-        client = APIToJson("./data")
+        client = APIToJson(self.storage)
         client.getDatasets()
 
     def test_getDeterminands(self):
-        client = APIToJson("./data")
+        client = APIToJson(self.storage)
         client.getDeterminands()
 
     def test_getSites(self):
-        client = APIToJson("./data")
+        client = APIToJson(self.storage)
         client.getSites("fft")
 
     def test_getDataForDate(self):
-        client = APIToJson("./data")
+        client = APIToJson(self.storage)
         client.getDataForDate("rainfall", "2024-07-31")
 
     def test_getTimeseries(self):
-        client = APIToJson("./data")
+        client = APIToJson(self.storage)
         client.getTimeseries("fft", "Oxford")
 
     def test_getTimeseriesDeterminand(self):
-        client = APIToJson("./data")
+        client = APIToJson(self.storage)
         client.getTimeseries("ea_wq_sonde", "E01612A", "fdom")
 
 

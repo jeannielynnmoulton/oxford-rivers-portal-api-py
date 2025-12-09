@@ -7,7 +7,7 @@ from src.oxrivers_api.models.request_models import Request
 from src.oxrivers_api.storage.abstract_storage import AbstractStorage
 
 
-class JSONStorage(AbstractStorage):
+class LocalJsonStorage(AbstractStorage):
     """
     Manages how JSON  is stored locally.
     Creates required directories and creates file names based on request parameters

@@ -5,7 +5,7 @@ import requests
 
 from src.oxrivers_api.errors.exceptions import InvalidDateFormat, ClientRequestError
 from src.oxrivers_api.models.request_models import DatasetRequest, DeterminandRequest, DataForDateInfo, TimeseriesInfo, SitesInfo, Request
-from src.oxrivers_api.storage.json_storage import JSONStorage
+from src.oxrivers_api.storage.json_storage import AbstractStorage
 
 
 class APIToJson:
@@ -13,11 +13,11 @@ class APIToJson:
     JSON is stored locally, and calls are made to the API only
     if there is not a local JSON file with the data requested."""
 
-    json_storage: JSONStorage
+    storage: AbstractStorage
     BASE_URL: str = "https://oxfordrivers.ceh.ac.uk/"
 
-    def __init__(self, data_dir):
-        self.json_storage = JSONStorage(data_dir)
+    def __init__(self, storage):
+        self.storage = storage
 
     @staticmethod
     def checkDateFormat(date: str):
@@ -56,9 +56,9 @@ class APIToJson:
         :rtype: Path
         """
         request = DatasetRequest()
-        filepath = self.json_storage.get_endpoint_json_filepath(request)
-        if not self.json_storage.json_file_exists(request):
-            self.json_storage.write(self._request(APIToJson.build_url(request)), filepath)
+        filepath = self.storage.get_endpoint_json_filepath(request)
+        if not self.storage.json_file_exists(request):
+            self.storage.write(self._request(APIToJson.build_url(request)), filepath)
         return filepath
 
     def getDeterminands(self):
@@ -68,9 +68,9 @@ class APIToJson:
         :rtype: Path
         """
         request = DeterminandRequest()
-        filepath = self.json_storage.get_endpoint_json_filepath(request)
-        if not self.json_storage.json_file_exists(request):
-            self.json_storage.write(self._request(APIToJson.build_url(request)), filepath)
+        filepath = self.storage.get_endpoint_json_filepath(request)
+        if not self.storage.json_file_exists(request):
+            self.storage.write(self._request(APIToJson.build_url(request)), filepath)
         return filepath
 
     def getSites(self, datasetID: str):
@@ -82,9 +82,9 @@ class APIToJson:
         :rtype: Path
         """
         request = SitesInfo(datasetID).request()
-        filepath = self.json_storage.get_endpoint_json_filepath(request)
-        if not self.json_storage.json_file_exists(request):
-            self.json_storage.write(self._request(APIToJson.build_url(request)), filepath)
+        filepath = self.storage.get_endpoint_json_filepath(request)
+        if not self.storage.json_file_exists(request):
+            self.storage.write(self._request(APIToJson.build_url(request)), filepath)
         return filepath
 
     def getDataForDate(self, datasetID: str, date: str):
@@ -99,9 +99,9 @@ class APIToJson:
         """
         APIToJson.checkDateFormat(date)
         request = DataForDateInfo(datasetID, date).request()
-        filepath = self.json_storage.get_endpoint_json_filepath(request)
-        if not self.json_storage.json_file_exists(request):
-            self.json_storage.write(self._request(APIToJson.build_url(request)), filepath)
+        filepath = self.storage.get_endpoint_json_filepath(request)
+        if not self.storage.json_file_exists(request):
+            self.storage.write(self._request(APIToJson.build_url(request)), filepath)
         return filepath
 
     def getTimeseries(self, datasetID: str, siteID: str, determinand: str = None):
@@ -117,9 +117,9 @@ class APIToJson:
         :rtype: Path
         """
         request = TimeseriesInfo(datasetID, siteID, determinand).request()
-        filepath = self.json_storage.get_endpoint_json_filepath(request)
-        if not self.json_storage.json_file_exists(request):
-            self.json_storage.write(self._request(APIToJson.build_url(request)), filepath)
+        filepath = self.storage.get_endpoint_json_filepath(request)
+        if not self.storage.json_file_exists(request):
+            self.storage.write(self._request(APIToJson.build_url(request)), filepath)
         return filepath
 
 
