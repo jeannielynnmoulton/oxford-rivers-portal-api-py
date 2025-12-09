@@ -3,8 +3,8 @@ import logging
 from dataclasses import fields
 from pathlib import Path
 
-from src.oxrivers_api.models.request_models import Request
-from src.oxrivers_api.storage.abstract_storage import AbstractStorage
+from oxrivers_api.models.request_models import Request
+from oxrivers_api.storage.abstract_storage import AbstractStorage
 
 
 class LocalJsonStorage(AbstractStorage):

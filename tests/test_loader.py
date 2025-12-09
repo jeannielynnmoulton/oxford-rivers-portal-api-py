@@ -1,11 +1,11 @@
 import unittest
 from pathlib import Path
 
-from src.oxrivers_api.api_to_json_client import APIToJson
-from src.oxrivers_api.data_loaders.json_to_pandas_loader import JsonToPandasLoader
-from src.oxrivers_api.models.request_models import DatasetsRequest, DeterminandsRequest, SitesRequest, \
+from oxrivers_api.api_to_json_client import APIToJson
+from oxrivers_api.data_loaders.json_to_pandas_loader import JsonToPandasLoader
+from oxrivers_api.models.request_models import DatasetsRequest, DeterminandsRequest, SitesRequest, \
     DataForDateRequest, TimeseriesRequest, SitesInfo, TimeseriesInfo, DataForDateInfo
-from src.oxrivers_api.storage.json_storage import LocalJsonStorage
+from oxrivers_api.storage.json_storage import LocalJsonStorage
 
 
 class TestLoader(unittest.TestCase):

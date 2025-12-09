@@ -21,10 +21,10 @@ to get the data in pandas format.
 
 ```python
 from pathlib import Path
-from src.oxrivers_api.storage.json_storage import LocalJsonStorage
-from src.oxrivers_api.api_to_json_client import APIToJson
-from src.oxrivers_api.data_loaders.json_to_pandas_loader import JsonToPandasLoader
-from src.oxrivers_api.models.request_models import TimeseriesInfo
+from oxrivers_api.storage.json_storage import LocalJsonStorage
+from oxrivers_api.api_to_json_client import APIToJson
+from oxrivers_api.data_loaders.json_to_pandas_loader import JsonToPandasLoader
+from oxrivers_api.models.request_models import TimeseriesInfo
 
 data_dir = Path("../data")
 storage = LocalJsonStorage(data_dir)
@@ -41,10 +41,10 @@ store json locally and load it as a pandas dataframe.
 
 ```python
 from pathlib import Path
-from src.oxrivers_api.storage.json_storage import LocalJsonStorage
-from src.oxrivers_api.api_to_json_client import APIToJson
-from src.oxrivers_api.data_loaders.json_to_pandas_loader import JsonToPandasLoader
-from src.oxrivers_api.models.request_models import TimeseriesInfo
+from oxrivers_api.storage.json_storage import LocalJsonStorage
+from oxrivers_api.api_to_json_client import APIToJson
+from oxrivers_api.data_loaders.json_to_pandas_loader import JsonToPandasLoader
+from oxrivers_api.models.request_models import TimeseriesInfo
 
 # Using the json to pandas loader will use the client to get the 
 # json as well as convert it to a data frame.
@@ -81,16 +81,16 @@ the default key maps the id to a name first.
 import pandas as pd
 from matplotlib import pyplot as plt
 
-from src.oxrivers_api.models.request_models import TimeseriesInfo, DataForDateInfo
-from src.oxrivers_api.data_cache import DataCache
-from src.oxrivers_api.data_loaders.json_to_pandas_loader import JsonToPandasLoader
+from oxrivers_api.models.request_models import TimeseriesInfo, DataForDateInfo
+from oxrivers_api.data_cache import DataCache
+from oxrivers_api.data_loaders.json_to_pandas_loader import JsonToPandasLoader
 from pathlib import Path
 from pprint import pprint
 
 import matplotlib
 
-from src.oxrivers_api.api_to_json_client import APIToJson
-from src.oxrivers_api.storage.json_storage import LocalJsonStorage
+from oxrivers_api.api_to_json_client import APIToJson
+from oxrivers_api.storage.json_storage import LocalJsonStorage
 
 # choose where to store json locally
 data_dir: Path = Path("../data")

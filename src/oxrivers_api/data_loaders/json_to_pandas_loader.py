@@ -3,10 +3,10 @@ from pathlib import Path
 
 import pandas as pd
 
-from src.oxrivers_api.api_to_json_client import APIToJson
-from src.oxrivers_api.data_loaders.abstract_loader import AbstractLoader
-from src.oxrivers_api.models.data_models import Determinand, Site, Timeseries
-from src.oxrivers_api.models.request_models import Request, DatasetsRequest, TimeseriesInfo, DataForDateInfo, SitesInfo
+from oxrivers_api.api_to_json_client import APIToJson
+from oxrivers_api.data_loaders.abstract_loader import AbstractLoader
+from oxrivers_api.models.data_models import Determinand, Site, Timeseries
+from oxrivers_api.models.request_models import Request, DatasetsRequest, TimeseriesInfo, DataForDateInfo, SitesInfo
 
 
 class JsonToPandasLoader(AbstractLoader):

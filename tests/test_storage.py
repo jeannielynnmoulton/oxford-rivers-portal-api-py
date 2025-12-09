@@ -2,8 +2,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from src.oxrivers_api.models.request_models import SitesInfo, DataForDateInfo, TimeseriesInfo, DatasetsInfo, DeterminandsInfo
-from src.oxrivers_api.storage.json_storage import LocalJsonStorage
+from oxrivers_api.models.request_models import SitesInfo, DataForDateInfo, TimeseriesInfo, DatasetsInfo, DeterminandsInfo
+from oxrivers_api.storage.json_storage import LocalJsonStorage
 
 
 class TestStorage(unittest.TestCase):

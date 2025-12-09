@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Optional
 
-from src.oxrivers_api.models.data_models import Dataset, Determinand, Site, DataForDate, Timeseries
+from oxrivers_api.models.data_models import Dataset, Determinand, Site, DataForDate, Timeseries
 
 @dataclass
 class RequestInfo:
