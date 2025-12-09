@@ -1,9 +1,9 @@
 import unittest
 from pathlib import Path
 
-from src.oxrivers_api.api_to_json import APIToJson
-from src.oxrivers_api.data_loaders.json_to_pandas import JsonToPandas
-from src.oxrivers_api.models.request_models import DatasetRequest, DeterminandRequest, SitesRequest, \
+from src.oxrivers_api.api_to_json_client import APIToJson
+from src.oxrivers_api.data_loaders.json_to_pandas_loader import JsonToPandasLoader
+from src.oxrivers_api.models.request_models import DatasetsRequest, DeterminandsRequest, SitesRequest, \
     DataForDateRequest, TimeseriesRequest, SitesInfo, TimeseriesInfo, DataForDateInfo
 from src.oxrivers_api.storage.json_storage import LocalJsonStorage
 
@@ -13,10 +13,10 @@ class TestLoader(unittest.TestCase):
     data_dir = Path("./tests/data")
     storage = LocalJsonStorage(data_dir)
     client = APIToJson(storage)
-    loader = JsonToPandas(client)
+    loader = JsonToPandasLoader(client)
 
     def test_load_datasets(self):
-        request = DatasetRequest()
+        request = DatasetsRequest()
         result = self.loader.load(request)
         self.assertListEqual(
             list(result.columns),
@@ -25,7 +25,7 @@ class TestLoader(unittest.TestCase):
         self.assertEqual(len(result), 11)
 
     def test_load_determinands(self):
-        request = DeterminandRequest()
+        request = DeterminandsRequest()
         result = self.loader.load(request)
         self.assertListEqual(list(result.columns), ['name', 'description', 'datasets'])
         self.assertEqual(len(result), 29)

@@ -11,12 +11,12 @@ class RequestInfo:
 @dataclass
 class DatasetsInfo(RequestInfo):
     def request(self):
-        return DatasetRequest()
+        return DatasetsRequest()
 
 @dataclass
-class DeterminandInfo(RequestInfo):
+class DeterminandsInfo(RequestInfo):
     def request(self):
-        return DeterminandRequest()
+        return DeterminandsRequest()
 
 @dataclass
 class SitesInfo(RequestInfo):
@@ -52,7 +52,7 @@ class Request:
         raise NotImplementedError
 
 @dataclass
-class DatasetRequest(Request):
+class DatasetsRequest(Request):
     data_model: type = Dataset
     json_storage_folder: str = "datasets"
     request_info = DatasetsInfo()
@@ -60,19 +60,19 @@ class DatasetRequest(Request):
     def as_pandas(self, json_to_pandas):
         return json_to_pandas.load_datasets()
     def request(self, api_client):
-        return api_client.getDatasets()
+        return api_client.get_datasets()
 
 
 @dataclass
-class DeterminandRequest(Request):
+class DeterminandsRequest(Request):
     data_model: type = Determinand
     json_storage_folder: str = "determinands"
-    request_info = DeterminandInfo()
+    request_info = DeterminandsInfo()
     url_endpoint = "getDeterminands"
     def as_pandas(self, json_to_pandas):
         return json_to_pandas.load_determinands()
     def request(self, api_client):
-        return api_client.getDeterminands()
+        return api_client.get_determinands()
 
 
 @dataclass
@@ -84,7 +84,7 @@ class SitesRequest(Request):
     def as_pandas(self, json_to_pandas):
         return json_to_pandas.load_sites(self.request_info)
     def request(self, api_client):
-        return api_client.getSites(self.request_info.datasetID)
+        return api_client.get_sites(self.request_info.datasetID)
 
 
 @dataclass
@@ -96,7 +96,7 @@ class DataForDateRequest(Request):
     def as_pandas(self, json_to_pandas):
         return json_to_pandas.load_data_for_date(self.request_info)
     def request(self, client):
-        return client.getDataForDate(self.request_info.datasetID, self.request_info.date)
+        return client.get_data_for_date(self.request_info.datasetID, self.request_info.date)
 
 
 @dataclass
@@ -108,7 +108,4 @@ class TimeseriesRequest(Request):
     def as_pandas(self, json_to_pandas):
         return json_to_pandas.load_timeseries(self.request_info)
     def request(self, client):
-        if self.request_info.determinand is None:
-            return client.getTimeseries(self.request_info.datasetID, self.request_info.siteID)
-        else:
-            return client.getTimeseriesDeterminand(self.request_info.datasetID, self.request_info.siteID, self.request_info.determinand)
+        return client.get_timeseries(self.request_info.datasetID, self.request_info.siteID, self.request_info.determinand)

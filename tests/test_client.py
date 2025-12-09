@@ -1,9 +1,9 @@
 import unittest
 from pathlib import Path
 
-from src.oxrivers_api.api_to_json import APIToJson
+from src.oxrivers_api.api_to_json_client import APIToJson
 from src.oxrivers_api.errors.exceptions import InvalidDateFormat
-from src.oxrivers_api.models.request_models import DatasetRequest, DeterminandRequest, SitesInfo, \
+from src.oxrivers_api.models.request_models import DatasetsRequest, DeterminandsRequest, SitesInfo, \
     DataForDateInfo, TimeseriesInfo
 from src.oxrivers_api.storage.json_storage import LocalJsonStorage
 
@@ -12,11 +12,11 @@ class TestClient(unittest.TestCase):
     storage = LocalJsonStorage(Path("./data"))
 
     def test_build_url_datasets(self):
-        url = APIToJson.build_url(DatasetRequest())
+        url = APIToJson.build_url(DatasetsRequest())
         self.assertEqual(url, "https://oxfordrivers.ceh.ac.uk/getDatasets")
 
     def test_build_url_determinands(self):
-        url = APIToJson.build_url(DeterminandRequest())
+        url = APIToJson.build_url(DeterminandsRequest())
         self.assertEqual(url, "https://oxfordrivers.ceh.ac.uk/getDeterminands")
 
     def test_build_url_sites(self):
@@ -46,27 +46,27 @@ class TestClient(unittest.TestCase):
 
     def test_getDatasets(self):
         client = APIToJson(self.storage)
-        client.getDatasets()
+        client.get_datasets()
 
     def test_getDeterminands(self):
         client = APIToJson(self.storage)
-        client.getDeterminands()
+        client.get_determinands()
 
     def test_getSites(self):
         client = APIToJson(self.storage)
-        client.getSites("fft")
+        client.get_sites("fft")
 
     def test_getDataForDate(self):
         client = APIToJson(self.storage)
-        client.getDataForDate("rainfall", "2024-07-31")
+        client.get_data_for_date("rainfall", "2024-07-31")
 
     def test_getTimeseries(self):
         client = APIToJson(self.storage)
-        client.getTimeseries("fft", "Oxford")
+        client.get_timeseries("fft", "Oxford")
 
     def test_getTimeseriesDeterminand(self):
         client = APIToJson(self.storage)
-        client.getTimeseries("ea_wq_sonde", "E01612A", "fdom")
+        client.get_timeseries("ea_wq_sonde", "E01612A", "fdom")
 
 
 if __name__ == '__main__':

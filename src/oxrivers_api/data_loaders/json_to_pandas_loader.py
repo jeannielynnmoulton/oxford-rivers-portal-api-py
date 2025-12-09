@@ -3,13 +3,13 @@ from pathlib import Path
 
 import pandas as pd
 
-from src.oxrivers_api.api_to_json import APIToJson
+from src.oxrivers_api.api_to_json_client import APIToJson
 from src.oxrivers_api.data_loaders.abstract_loader import AbstractLoader
 from src.oxrivers_api.models.data_models import Determinand, Site, Timeseries
-from src.oxrivers_api.models.request_models import Request, DatasetRequest, TimeseriesInfo, DataForDateInfo, SitesInfo
+from src.oxrivers_api.models.request_models import Request, DatasetsRequest, TimeseriesInfo, DataForDateInfo, SitesInfo
 
 
-class JsonToPandas(AbstractLoader):
+class JsonToPandasLoader(AbstractLoader):
     """
     Converts JSON to Pandas Dataframe
     """
@@ -30,17 +30,17 @@ class JsonToPandas(AbstractLoader):
         return pd.json_normalize(dicts, sep='_')
 
     def load_datasets(self) -> pd.DataFrame:
-        return self.base_load(DatasetRequest())
+        return self.base_load(DatasetsRequest())
 
     def load_determinands(self) -> pd.DataFrame:
-        with open(self.api_client.getDeterminands(), "r") as f:
+        with open(self.api_client.get_determinands(), "r") as f:
             data = json.load(f)
         determinands = [Determinand(**d) for d in data["features"]]
         dicts = [d.model_dump() for d in determinands]
         return pd.json_normalize(dicts, sep='_')
 
     def load_sites(self, info: SitesInfo) -> pd.DataFrame:
-        with open(self.api_client.getSites(info.datasetID), "r") as f:
+        with open(self.api_client.get_sites(info.datasetID), "r") as f:
             data = json.load(f)
         datasets = [Site(**d) for d in data["features"]]
         dicts = [d.model_dump() for d in datasets]
@@ -56,7 +56,7 @@ class JsonToPandas(AbstractLoader):
         return df
 
     def load_data_for_date(self, info: DataForDateInfo) -> pd.DataFrame:
-        with open(self.api_client.getDataForDate(info.datasetID, info.date), "r") as f:
+        with open(self.api_client.get_data_for_date(info.datasetID, info.date), "r") as f:
             raw = json.load(f)
         df = pd.DataFrame(raw.get("data", []))
 
@@ -95,4 +95,4 @@ class JsonToPandas(AbstractLoader):
         return df
 
     def load_timeseries(self, info: TimeseriesInfo) -> pd.DataFrame:
-        return self.load_timeseries_base(self.api_client.getTimeseries(info.datasetID, info.siteID, info.determinand))
+        return self.load_timeseries_base(self.api_client.get_timeseries(info.datasetID, info.siteID, info.determinand))

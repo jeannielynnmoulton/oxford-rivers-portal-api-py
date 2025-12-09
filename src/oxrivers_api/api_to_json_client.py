@@ -4,7 +4,7 @@ from dataclasses import fields
 import requests
 
 from src.oxrivers_api.errors.exceptions import InvalidDateFormat, ClientRequestError
-from src.oxrivers_api.models.request_models import DatasetRequest, DeterminandRequest, DataForDateInfo, TimeseriesInfo, SitesInfo, Request
+from src.oxrivers_api.models.request_models import DatasetsRequest, DeterminandsRequest, DataForDateInfo, TimeseriesInfo, SitesInfo, Request
 from src.oxrivers_api.storage.json_storage import AbstractStorage
 
 
@@ -49,31 +49,31 @@ class APIToJson:
         except Exception as e:
             raise ClientRequestError(e)
 
-    def getDatasets(self):
+    def get_datasets(self):
         """
         Makes a request to the API for getDatasets
         :return: Path to where the json file is stored
         :rtype: Path
         """
-        request = DatasetRequest()
+        request = DatasetsRequest()
         filepath = self.storage.get_endpoint_json_filepath(request)
         if not self.storage.json_file_exists(request):
             self.storage.write(self._request(APIToJson.build_url(request)), filepath)
         return filepath
 
-    def getDeterminands(self):
+    def get_determinands(self):
         """
         Makes a request to the API for getDeterminands
         :return: Path to where the json file is stored
         :rtype: Path
         """
-        request = DeterminandRequest()
+        request = DeterminandsRequest()
         filepath = self.storage.get_endpoint_json_filepath(request)
         if not self.storage.json_file_exists(request):
             self.storage.write(self._request(APIToJson.build_url(request)), filepath)
         return filepath
 
-    def getSites(self, datasetID: str):
+    def get_sites(self, datasetID: str):
         """
         Makes a request to the API for getSites for given datasetID
         :param datasetID: the dataset to get
@@ -87,7 +87,7 @@ class APIToJson:
             self.storage.write(self._request(APIToJson.build_url(request)), filepath)
         return filepath
 
-    def getDataForDate(self, datasetID: str, date: str):
+    def get_data_for_date(self, datasetID: str, date: str):
         """
         Makes a request to the API for getDataForDate for given datasetID and date in YYYY-MM-DD format
         :param datasetID: the dataset to get
@@ -104,7 +104,7 @@ class APIToJson:
             self.storage.write(self._request(APIToJson.build_url(request)), filepath)
         return filepath
 
-    def getTimeseries(self, datasetID: str, siteID: str, determinand: str = None):
+    def get_timeseries(self, datasetID: str, siteID: str, determinand: str = None):
         """
         Makes a request to the API for getTimeseries for given datasetID, siteID and determinand (if required)
         :param datasetID: the dataset to get

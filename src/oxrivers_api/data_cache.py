@@ -1,7 +1,7 @@
 import pandas as pd
 
-from src.oxrivers_api.data_loaders.json_to_pandas import JsonToPandas
-from src.oxrivers_api.models.request_models import TimeseriesInfo, DataForDateInfo, RequestInfo, SitesInfo, SitesRequest, DatasetRequest, DeterminandRequest
+from src.oxrivers_api.data_loaders.json_to_pandas_loader import JsonToPandasLoader
+from src.oxrivers_api.models.request_models import TimeseriesInfo, DataForDateInfo, RequestInfo, SitesInfo, SitesRequest, DatasetsRequest, DeterminandsRequest
 
 class DataCache:
     """A utility wrapper are the json_to_pandas loader.
@@ -20,7 +20,7 @@ class DataCache:
     print(contents)
     """
 
-    loader: JsonToPandas
+    loader: JsonToPandasLoader
 
     datasets: pd.DataFrame
     determinands: pd.DataFrame
@@ -32,8 +32,8 @@ class DataCache:
 
     def __init__(self, loader):
         self.loader = loader
-        self.datasets = loader.load(DatasetRequest())
-        self.determinands = loader.load(DeterminandRequest())
+        self.datasets = loader.load(DatasetsRequest())
+        self.determinands = loader.load(DeterminandsRequest())
         self.sites = {datasetID: loader.load(SitesInfo(datasetID).request()) for datasetID in self.datasets["id"]}
         self.timeseries = {}
         self.dates = {}

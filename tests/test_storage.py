@@ -2,7 +2,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from src.oxrivers_api.models.request_models import SitesInfo, DataForDateInfo, TimeseriesInfo, DatasetsInfo, DeterminandInfo
+from src.oxrivers_api.models.request_models import SitesInfo, DataForDateInfo, TimeseriesInfo, DatasetsInfo, DeterminandsInfo
 from src.oxrivers_api.storage.json_storage import LocalJsonStorage
 
 
@@ -30,7 +30,7 @@ class TestStorage(unittest.TestCase):
     def test_dataset_request_storage(self):
         data_dir = Path(self.tmpdir) / "data"
         storage = LocalJsonStorage(Path(data_dir).resolve())
-        requests = [DatasetsInfo().request(), DeterminandInfo().request(), SitesInfo("dataset").request(), DataForDateInfo("site", "2025-05-05").request(), TimeseriesInfo("dataset", "site").request(), TimeseriesInfo("dataset", "site", "determinand").request() ]
+        requests = [DatasetsInfo().request(), DeterminandsInfo().request(), SitesInfo("dataset").request(), DataForDateInfo("site", "2025-05-05").request(), TimeseriesInfo("dataset", "site").request(), TimeseriesInfo("dataset", "site", "determinand").request()]
         for request in requests:
             endpoint_folder = storage.create_endpoint_folder(request)
             self.assertEqual(endpoint_folder, Path(data_dir).resolve() / request.json_storage_folder)
