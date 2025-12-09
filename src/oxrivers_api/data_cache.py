@@ -1,11 +1,11 @@
 import pandas as pd
 
-from src.oxrivers_api.loader import Loader
-from src.oxrivers_api.request_models import TimeseriesInfo, DataForDateInfo, RequestInfo, DeterminandInfo, DatasetsInfo, \
-    SitesInfo, SitesRequest, DatasetRequest, DeterminandRequest
+from src.oxrivers_api.data_loaders.json_to_pandas import JsonToPandas
+from src.oxrivers_api.models.request_models import TimeseriesInfo, DataForDateInfo, RequestInfo, SitesInfo, SitesRequest, DatasetRequest, DeterminandRequest
 
 class DataCache:
-    """A utility for getting and storing data from the Oxford Rivers API.
+    """A utility wrapper are the json_to_pandas loader.
+
     Automatically stores all dataset, sites and determinand data.
     Provides functions for getting and storing timeseries and data for date,
     including a user-friendly naming scheme.
@@ -20,7 +20,7 @@ class DataCache:
     print(contents)
     """
 
-    loader: Loader
+    loader: JsonToPandas
 
     datasets: pd.DataFrame
     determinands: pd.DataFrame
@@ -34,7 +34,7 @@ class DataCache:
         self.loader = loader
         self.datasets = loader.load(DatasetRequest())
         self.determinands = loader.load(DeterminandRequest())
-        self.sites = {datasetID: loader.load(SitesRequest(SitesInfo(datasetID))) for datasetID in self.datasets["id"]}
+        self.sites = {datasetID: loader.load(SitesInfo(datasetID).request()) for datasetID in self.datasets["id"]}
         self.timeseries = {}
         self.dates = {}
         self.key_to_info = {}

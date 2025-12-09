@@ -1,6 +1,10 @@
-from pydantic import BaseModel, Field, field_validator, RootModel
+from pydantic import BaseModel, field_validator, RootModel
 from typing import List, Optional, Dict, Any, Union
 from datetime import datetime, date
+
+"""
+Models for data from the API. Used to convert
+"""
 
 # -------------------------
 # Dataset
@@ -102,8 +106,3 @@ TimeseriesData = Union[
 class Timeseries(BaseModel):
     metadata: TimeseriesMetadata
     data: TimeseriesData
-
-    # model_config = {
-    #     "populate_by_name": True,  # allow using field names even if there are aliases
-    #     "extra": "ignore"          # ignore fields not defined in the model
-    # }

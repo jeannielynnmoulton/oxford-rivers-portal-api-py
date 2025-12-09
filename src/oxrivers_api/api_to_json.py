@@ -1,0 +1,125 @@
+import datetime
+from dataclasses import fields
+
+import requests
+
+from src.oxrivers_api.errors.exceptions import InvalidDateFormat, ClientRequestError
+from src.oxrivers_api.models.request_models import DatasetRequest, DeterminandRequest, DataForDateInfo, TimeseriesInfo, SitesInfo, Request
+from src.oxrivers_api.storage.json_storage import JSONStorage
+
+class APIToJson:
+    """Responsible for getting JSON from the API.
+    JSON is stored locally, and calls are made to the API only
+    if there is not a local JSON file with the data requested."""
+
+    json_storage: JSONStorage
+    BASE_URL: str = "https://oxfordrivers.ceh.ac.uk/"
+
+    def __init__(self, data_dir):
+        self.json_storage = JSONStorage(data_dir)
+
+    @staticmethod
+    def checkDateFormat(date: str):
+        try:
+            formatted = str(datetime.datetime.strptime(date, "%Y-%m-%d").date())
+        except:
+            raise InvalidDateFormat(f"{date} is not a valid date format. Date must have format YYYY-MM-DD.")
+        if formatted != date:
+            raise InvalidDateFormat(f"{date} is not a valid date format. Date must have format YYYY-MM-DD.")
+
+
+    @staticmethod
+    def build_url(request: Request):
+        url = APIToJson.BASE_URL + request.url_endpoint
+        request_info = fields(request.request_info)
+        if len(request_info) == 0:
+            return url
+        parameter_elements = []
+        for i, info in enumerate(request_info):
+            if info.name is None or getattr(request.request_info, info.name) is None:
+                continue
+            parameter_elements.append(info.name+"="+getattr(request.request_info, info.name))
+        return url + "?" + "&".join(parameter_elements)
+
+    def _request(self, url):
+        try:
+            response = requests.get(url).json()
+            return response
+        except Exception as e:
+            raise ClientRequestError(e)
+
+    def getDatasets(self):
+        """
+        Makes a request to the API for getDatasets
+        :return: Path to where the json file is stored
+        :rtype: Path
+        """
+        request = DatasetRequest()
+        filepath = self.json_storage.get_endpoint_json_filepath(request)
+        if not self.json_storage.json_file_exists(request):
+            self.json_storage.write(self._request(APIToJson.build_url(request)), filepath)
+        return filepath
+
+    def getDeterminands(self):
+        """
+        Makes a request to the API for getDeterminands
+        :return: Path to where the json file is stored
+        :rtype: Path
+        """
+        request = DeterminandRequest()
+        filepath = self.json_storage.get_endpoint_json_filepath(request)
+        if not self.json_storage.json_file_exists(request):
+            self.json_storage.write(self._request(APIToJson.build_url(request)), filepath)
+        return filepath
+
+    def getSites(self, datasetID: str):
+        """
+        Makes a request to the API for getSites for given datasetID
+        :param datasetID: the dataset to get
+        :type datasetID: str
+        :return: Path to where the json file is stored
+        :rtype: Path
+        """
+        request = SitesInfo(datasetID).request()
+        filepath = self.json_storage.get_endpoint_json_filepath(request)
+        if not self.json_storage.json_file_exists(request):
+            self.json_storage.write(self._request(APIToJson.build_url(request)), filepath)
+        return filepath
+
+    def getDataForDate(self, datasetID: str, date: str):
+        """
+        Makes a request to the API for getDataForDate for given datasetID and date in YYYY-MM-DD format
+        :param datasetID: the dataset to get
+        :type datasetID: str
+        :param date: the date to get in YYYY-MM-DD format
+        :type date: str
+        :return: Path to where the json file is stored
+        :rtype: Path
+        """
+        APIToJson.checkDateFormat(date)
+        request = DataForDateInfo(datasetID, date).request()
+        filepath = self.json_storage.get_endpoint_json_filepath(request)
+        if not self.json_storage.json_file_exists(request):
+            self.json_storage.write(self._request(APIToJson.build_url(request)), filepath)
+        return filepath
+
+    def getTimeseries(self, datasetID: str, siteID: str, determinand: str = None):
+        """
+        Makes a request to the API for getTimeseries for given datasetID, siteID and determinand (if required)
+        :param datasetID: the dataset to get
+        :type datasetID: str
+        :param siteID: the site to get, by ID not name
+        :type siteID: str
+        :param determinand: default None, the determinand to get, by ID not name
+        :type determinand: Optional[str]
+        :return: Path to where the json file is stored
+        :rtype: Path
+        """
+        request = TimeseriesInfo(datasetID, siteID, determinand).request()
+        filepath = self.json_storage.get_endpoint_json_filepath(request)
+        if not self.json_storage.json_file_exists(request):
+            self.json_storage.write(self._request(APIToJson.build_url(request)), filepath)
+        return filepath
+
+
+
