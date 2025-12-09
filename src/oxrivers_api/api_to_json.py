@@ -7,6 +7,7 @@ from src.oxrivers_api.errors.exceptions import InvalidDateFormat, ClientRequestE
 from src.oxrivers_api.models.request_models import DatasetRequest, DeterminandRequest, DataForDateInfo, TimeseriesInfo, SitesInfo, Request
 from src.oxrivers_api.storage.json_storage import JSONStorage
 
+
 class APIToJson:
     """Responsible for getting JSON from the API.
     JSON is stored locally, and calls are made to the API only

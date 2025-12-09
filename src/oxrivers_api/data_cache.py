@@ -79,7 +79,7 @@ class DataCache:
             sites_name: str = "_".join(sites_df[sites_df["properties_id"] == info.siteID]["properties_name"].iloc[0].split(" "))
             print(sites_name)
             determinand_name: str = self._lookup_determinand_name(info.datasetID, info.determinand)
-            key = ":".join([info.datasetID, sites_name, determinand_name])
+            key = "_".join([info.datasetID, sites_name, determinand_name])
         self.key_to_info[key] = info
         self.timeseries[key] = self.loader.load_timeseries(info)
         return self.timeseries[key]
@@ -118,7 +118,7 @@ class DataCache:
         if key is not None and key in self.dates.keys():
             raise Exception(f"Key {key} already exists for data for date. Choose a unique key.")
         if key is None:
-            key = "_".join([info.datasetID, info.date])
+            key = "_".join([info.datasetID, "_".join(info.date.split("-"))])
         self.key_to_info[key] = info
         self.timeseries[key] = self.loader.load_data_for_date(info)
         return self.timeseries[key]
