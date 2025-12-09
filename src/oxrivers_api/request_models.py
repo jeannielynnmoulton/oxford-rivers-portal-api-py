@@ -85,7 +85,7 @@ class DataForDateRequest(Request):
     json_storage_folder: str = "dates"
     url_endpoint = "getDataForDate"
     def as_pandas(self, loader):
-        return loader.load_data_for_date(self.request_info.datasetID, self.request_info.date)
+        return loader.load_data_for_date(self.request_info)
     def request(self, client):
         return client.getDataForDate(self.request_info.datasetID, self.request_info.date)
 
@@ -97,10 +97,7 @@ class TimeseriesRequest(Request):
     json_storage_folder: str = "timeseries"
     url_endpoint = "getTimeseries"
     def as_pandas(self, loader):
-        if self.request_info.determinand is None:
-            return loader.load_timeseries(self.request_info.datasetID, self.request_info.siteID)
-        else:
-            return loader.load_timeseries_determinand(self.request_info.datasetID, self.request_info.siteID, self.request_info.determinand)
+        return loader.load_timeseries(self.request_info)
     def request(self, client):
         if self.request_info.determinand is None:
             return client.getTimeseries(self.request_info.datasetID, self.request_info.siteID)

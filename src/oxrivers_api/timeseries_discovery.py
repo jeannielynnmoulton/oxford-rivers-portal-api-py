@@ -4,6 +4,7 @@ from typing import Optional
 import pandas as pd
 
 from src.oxrivers_api.loader import Loader
+from src.oxrivers_api.request_models import TimeseriesRequest, TimeseriesInfo
 
 
 class TimeseriesDiscovery:
@@ -29,7 +30,7 @@ class TimeseriesDiscovery:
         self.loader = loader
         self.determinand = determinand
         # try:
-        self.timeseries = loader.load_timeseries_determinand(datasetID, siteID, determinand)
+        self.timeseries = loader.load(TimeseriesRequest(TimeseriesInfo(datasetID, siteID, determinand)))
         # except Exception as e:
         #     raise Exception(f"Maybe this timeseries does not require a determinand? {e}")
 

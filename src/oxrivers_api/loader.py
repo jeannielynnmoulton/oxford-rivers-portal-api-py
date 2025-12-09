@@ -5,7 +5,7 @@ import pandas as pd
 
 from src.oxrivers_api.client import OxfordRiversClient
 from src.oxrivers_api.data_models import Determinand, Site, Timeseries
-from src.oxrivers_api.request_models import Request, DatasetRequest
+from src.oxrivers_api.request_models import Request, DatasetRequest, TimeseriesInfo, DataForDateInfo
 
 
 class Loader:
@@ -54,8 +54,8 @@ class Loader:
     # -------------------------
     # Load DataForDate → DataFrame
     # -------------------------
-    def load_data_for_date(self, datasetID: str, date: str) -> pd.DataFrame:
-        with open(self.client.getDataForDate(datasetID, date), "r") as f:
+    def load_data_for_date(self, info: DataForDateInfo) -> pd.DataFrame:
+        with open(self.client.getDataForDate(info.datasetID, info.date), "r") as f:
             raw = json.load(f)
         df = pd.DataFrame(raw.get("data", []))
 
@@ -65,7 +65,6 @@ class Loader:
             df['value'] = df['value'].astype(float)
 
         return df
-
     # -------------------------
     # Load Timeseries → DataFrame
     # -------------------------
@@ -96,8 +95,8 @@ class Loader:
         df["datetime"] = pd.to_datetime(df["datetime"])
         return df
 
-    def load_timeseries(self, datasetID: str, siteID: str) -> pd.DataFrame:
-        return self.load_timeseries_base(self.client.getTimeseries(datasetID, siteID))
-
-    def load_timeseries_determinand(self, datasetID: str, siteID: str, determinand: str) -> pd.DataFrame:
-        return self.load_timeseries_base(self.client.getTimeseriesDeterminand(datasetID, siteID, determinand))
+    def load_timeseries(self, info: TimeseriesInfo) -> pd.DataFrame:
+        if info.determinand is None:
+            return self.load_timeseries_base(self.client.getTimeseries(info.datasetID, info.siteID))
+        else:
+            return self.load_timeseries_base(self.client.getTimeseriesDeterminand(info.datasetID, info.siteID, info.determinand))
