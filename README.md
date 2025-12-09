@@ -5,9 +5,14 @@ A Python library for accessing and processing data from the
 **Oxford Rivers Portal** (https://oxfordrivers.ceh.ac.uk/).
 
 ## Quickstart
-To build locally, you'll need to run
+
+### installation
+The project is available on Test PyPi
+To install run
 ```commandline
-pipenv install
+pip install --index-url https://test.pypi.org/simple/ \
+            --extra-index-url https://pypi.org/simple \
+            oxford-rivers-portal-api-py --force-reinstall --no-cache-dir
 ```
 A demo is available in `src/oxrivers_api/demo.ipynb`.
 

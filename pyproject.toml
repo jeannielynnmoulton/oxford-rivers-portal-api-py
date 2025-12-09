@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "oxford-rivers-portal-api-py"
-version = "0.1.0"
+version = "0.1.6"
 description = "Python client for the Oxford Rivers Portal API"
 readme = "README.md"
 license = { text = "MIT" }
@@ -14,8 +14,9 @@ authors = [
 requires-python = ">=3.8"
 
 dependencies = [
-  "requests",
-  "pandas"
+  "requests>=2.28.0",
+  "pandas>=2.0.0",
+  "pydantic==2.12.5"
 ]
 
 classifiers = [
@@ -26,3 +27,9 @@ classifiers = [
 
 [project.urls]
 Homepage = "https://github.com/jeannielynnmoulton/oxford-rivers-portal-api-py"
+
+[tool.setuptools]
+packages = ["oxrivers_api", "oxrivers_api.data_loaders", "oxrivers_api.models", "oxrivers_api.errors", "oxrivers_api.storage"]
+
+package-dir = {"" = "src"}
+include-package-data = true

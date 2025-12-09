@@ -6,9 +6,7 @@ verify_ssl = true
 [packages]
 requests = "*"
 pandas = "*"
-numpy = "*"
 pydantic = "*"
-shapely = "*"
 
 [dev-packages]
 pytest = "*"
