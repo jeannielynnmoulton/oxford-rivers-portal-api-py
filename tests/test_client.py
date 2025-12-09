@@ -1,68 +1,72 @@
 import unittest
+from pathlib import Path
 
-from src.oxrivers_api.client import OxfordRiversClient
-from src.oxrivers_api.exceptions import MissingParameterException, InvalidDateFormat
-from src.oxrivers_api.request_models import DatasetRequest, DatasetsInfo, DeterminandRequest, SitesRequest, SitesInfo, \
-    DataForDateRequest, DataForDateInfo, TimeseriesRequest, TimeseriesInfo
+from src.oxrivers_api.api_to_json_client import APIToJson
+from src.oxrivers_api.errors.exceptions import InvalidDateFormat
+from src.oxrivers_api.models.request_models import DatasetsRequest, DeterminandsRequest, SitesInfo, \
+    DataForDateInfo, TimeseriesInfo
+from src.oxrivers_api.storage.json_storage import LocalJsonStorage
 
 
-class MyTestCase(unittest.TestCase):
+class TestClient(unittest.TestCase):
+    storage = LocalJsonStorage(Path("./data"))
+
     def test_build_url_datasets(self):
-        url = OxfordRiversClient.build_url(DatasetRequest())
+        url = APIToJson.build_url(DatasetsRequest())
         self.assertEqual(url, "https://oxfordrivers.ceh.ac.uk/getDatasets")
 
     def test_build_url_determinands(self):
-        url = OxfordRiversClient.build_url(DeterminandRequest())
+        url = APIToJson.build_url(DeterminandsRequest())
         self.assertEqual(url, "https://oxfordrivers.ceh.ac.uk/getDeterminands")
 
     def test_build_url_sites(self):
-        url = OxfordRiversClient.build_url(SitesRequest(SitesInfo("edm")))
+        url = APIToJson.build_url(SitesInfo("edm").request())
         self.assertEqual(url, "https://oxfordrivers.ceh.ac.uk/getSites?datasetID=edm")
 
     def test_build_url_dates(self):
-        url = OxfordRiversClient.build_url(DataForDateRequest(DataForDateInfo("fft", "2024-04-04")))
+        url = APIToJson.build_url(DataForDateInfo("fft", "2024-04-04").request())
         self.assertEqual(url, "https://oxfordrivers.ceh.ac.uk/getDataForDate?datasetID=fft&date=2024-04-04")
 
     def test_build_url_timeseries(self):
-        url = OxfordRiversClient.build_url(TimeseriesRequest(TimeseriesInfo("fft", "Oxford")))
+        url = APIToJson.build_url(TimeseriesInfo("fft", "Oxford").request())
         self.assertEqual(url, "https://oxfordrivers.ceh.ac.uk/getTimeseries?datasetID=fft&siteID=Oxford")
 
     def test_check_date_format(self):
-        OxfordRiversClient.checkDateFormat("2025-05-05")
+        APIToJson.checkDateFormat("2025-05-05")
         with self.assertRaises(InvalidDateFormat):
-            OxfordRiversClient.checkDateFormat("05-05-2025")
+            APIToJson.checkDateFormat("05-05-2025")
         with self.assertRaises(InvalidDateFormat):
-            OxfordRiversClient.checkDateFormat("2025-5-05")
+            APIToJson.checkDateFormat("2025-5-05")
         with self.assertRaises(InvalidDateFormat):
-            OxfordRiversClient.checkDateFormat("2025-13-5")
+            APIToJson.checkDateFormat("2025-13-5")
 
     def test_build_url_timeseries_determinand(self):
-        url = OxfordRiversClient.build_url(TimeseriesRequest(TimeseriesInfo("ea_bathing_water", "EA1234", "EC")))
+        url = APIToJson.build_url(TimeseriesInfo("ea_bathing_water", "EA1234", "EC").request())
         self.assertEqual(url, "https://oxfordrivers.ceh.ac.uk/getTimeseries?datasetID=ea_bathing_water&siteID=EA1234&determinand=EC")
 
     def test_getDatasets(self):
-        client = OxfordRiversClient("./data")
-        client.getDatasets()
+        client = APIToJson(self.storage)
+        client.get_datasets()
 
     def test_getDeterminands(self):
-        client = OxfordRiversClient("./data")
-        client.getDeterminands()
+        client = APIToJson(self.storage)
+        client.get_determinands()
 
     def test_getSites(self):
-        client = OxfordRiversClient("./data")
-        client.getSites("fft")
+        client = APIToJson(self.storage)
+        client.get_sites("fft")
 
     def test_getDataForDate(self):
-        client = OxfordRiversClient("./data")
-        client.getDataForDate("rainfall", "2024-07-31")
+        client = APIToJson(self.storage)
+        client.get_data_for_date("rainfall", "2024-07-31")
 
     def test_getTimeseries(self):
-        client = OxfordRiversClient("./data")
-        client.getTimeseries("fft", "Oxford")
+        client = APIToJson(self.storage)
+        client.get_timeseries("fft", "Oxford")
 
     def test_getTimeseriesDeterminand(self):
-        client = OxfordRiversClient("./data")
-        client.getTimeseriesDeterminand("ea_wq_sonde", "E01612A", "fdom")
+        client = APIToJson(self.storage)
+        client.get_timeseries("ea_wq_sonde", "E01612A", "fdom")
 
 
 if __name__ == '__main__':

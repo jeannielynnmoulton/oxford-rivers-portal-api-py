@@ -3,40 +3,44 @@ from pathlib import Path
 
 import pandas as pd
 
-from src.oxrivers_api.client import OxfordRiversClient
-from src.oxrivers_api.data_models import Determinand, Site, Timeseries
-from src.oxrivers_api.request_models import Request, DatasetRequest, TimeseriesInfo, DataForDateInfo
+from src.oxrivers_api.api_to_json_client import APIToJson
+from src.oxrivers_api.data_loaders.abstract_loader import AbstractLoader
+from src.oxrivers_api.models.data_models import Determinand, Site, Timeseries
+from src.oxrivers_api.models.request_models import Request, DatasetsRequest, TimeseriesInfo, DataForDateInfo, SitesInfo
 
 
-class Loader:
+class JsonToPandasLoader(AbstractLoader):
+    """
+    Converts JSON to Pandas Dataframe
+    """
 
-    client: OxfordRiversClient
+    api_client: APIToJson
 
-    def __init__(self, client: OxfordRiversClient):
-        self.client = client
+    def __init__(self, api_client: APIToJson):
+        self.api_client = api_client
 
-    def load(self, parameter: Request):
-        return parameter.as_pandas(self)
+    def load(self, request: Request):
+        return request.as_pandas(self)
 
-    def base_load(self, parameter: Request):
-        with open(parameter.request(self.client), "r") as f:
+    def base_load(self, request: Request):
+        with open(request.request(self.api_client), "r") as f:
             data = json.load(f)
-        datasets = [parameter.data_model(**d) for d in data]
+        datasets = [request.data_model(**d) for d in data]
         dicts = [d.model_dump() for d in datasets]
         return pd.json_normalize(dicts, sep='_')
 
     def load_datasets(self) -> pd.DataFrame:
-        return self.base_load(DatasetRequest())
+        return self.base_load(DatasetsRequest())
 
     def load_determinands(self) -> pd.DataFrame:
-        with open(self.client.getDeterminands(), "r") as f:
+        with open(self.api_client.get_determinands(), "r") as f:
             data = json.load(f)
         determinands = [Determinand(**d) for d in data["features"]]
         dicts = [d.model_dump() for d in determinands]
         return pd.json_normalize(dicts, sep='_')
 
-    def load_sites(self, datasetID: str) -> pd.DataFrame:
-        with open(self.client.getSites(datasetID), "r") as f:
+    def load_sites(self, info: SitesInfo) -> pd.DataFrame:
+        with open(self.api_client.get_sites(info.datasetID), "r") as f:
             data = json.load(f)
         datasets = [Site(**d) for d in data["features"]]
         dicts = [d.model_dump() for d in datasets]
@@ -51,11 +55,8 @@ class Loader:
 
         return df
 
-    # -------------------------
-    # Load DataForDate → DataFrame
-    # -------------------------
     def load_data_for_date(self, info: DataForDateInfo) -> pd.DataFrame:
-        with open(self.client.getDataForDate(info.datasetID, info.date), "r") as f:
+        with open(self.api_client.get_data_for_date(info.datasetID, info.date), "r") as f:
             raw = json.load(f)
         df = pd.DataFrame(raw.get("data", []))
 
@@ -65,9 +66,7 @@ class Loader:
             df['value'] = df['value'].astype(float)
 
         return df
-    # -------------------------
-    # Load Timeseries → DataFrame
-    # -------------------------
+
     def dict_to_list(self, d: dict[str, dict[str, dict]]) -> list:
         result = []
         columns = list(d.keys())
@@ -96,7 +95,4 @@ class Loader:
         return df
 
     def load_timeseries(self, info: TimeseriesInfo) -> pd.DataFrame:
-        if info.determinand is None:
-            return self.load_timeseries_base(self.client.getTimeseries(info.datasetID, info.siteID))
-        else:
-            return self.load_timeseries_base(self.client.getTimeseriesDeterminand(info.datasetID, info.siteID, info.determinand))
+        return self.load_timeseries_base(self.api_client.get_timeseries(info.datasetID, info.siteID, info.determinand))

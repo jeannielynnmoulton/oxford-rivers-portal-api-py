@@ -1,11 +1,11 @@
 import pandas as pd
 
-from src.oxrivers_api.loader import Loader
-from src.oxrivers_api.request_models import TimeseriesInfo, DataForDateInfo, RequestInfo, DeterminandInfo, DatasetsInfo, \
-    SitesInfo, SitesRequest, DatasetRequest, DeterminandRequest
+from src.oxrivers_api.data_loaders.json_to_pandas_loader import JsonToPandasLoader
+from src.oxrivers_api.models.request_models import TimeseriesInfo, DataForDateInfo, RequestInfo, SitesInfo, SitesRequest, DatasetsRequest, DeterminandsRequest
 
 class DataCache:
-    """A utility for getting and storing data from the Oxford Rivers API.
+    """A utility wrapper are the json_to_pandas loader.
+
     Automatically stores all dataset, sites and determinand data.
     Provides functions for getting and storing timeseries and data for date,
     including a user-friendly naming scheme.
@@ -20,7 +20,7 @@ class DataCache:
     print(contents)
     """
 
-    loader: Loader
+    loader: JsonToPandasLoader
 
     datasets: pd.DataFrame
     determinands: pd.DataFrame
@@ -32,9 +32,9 @@ class DataCache:
 
     def __init__(self, loader):
         self.loader = loader
-        self.datasets = loader.load(DatasetRequest())
-        self.determinands = loader.load(DeterminandRequest())
-        self.sites = {datasetID: loader.load(SitesRequest(SitesInfo(datasetID))) for datasetID in self.datasets["id"]}
+        self.datasets = loader.load(DatasetsRequest())
+        self.determinands = loader.load(DeterminandsRequest())
+        self.sites = {datasetID: loader.load(SitesInfo(datasetID).request()) for datasetID in self.datasets["id"]}
         self.timeseries = {}
         self.dates = {}
         self.key_to_info = {}
@@ -78,8 +78,8 @@ class DataCache:
             sites_df = self.sites[info.datasetID]
             sites_name: str = "_".join(sites_df[sites_df["properties_id"] == info.siteID]["properties_name"].iloc[0].split(" "))
             print(sites_name)
-            determinand_name: str = self._lookup_determinand_name(info.datasetID, info.determinand)
-            key = ":".join([info.datasetID, sites_name, determinand_name])
+            determinand_name: str = self.lookup_determinand_name(info.datasetID, info.determinand)
+            key = "_".join([info.datasetID, sites_name, determinand_name])
         self.key_to_info[key] = info
         self.timeseries[key] = self.loader.load_timeseries(info)
         return self.timeseries[key]
@@ -118,7 +118,7 @@ class DataCache:
         if key is not None and key in self.dates.keys():
             raise Exception(f"Key {key} already exists for data for date. Choose a unique key.")
         if key is None:
-            key = "_".join([info.datasetID, info.date])
+            key = "_".join([info.datasetID, "_".join(info.date.split("-"))])
         self.key_to_info[key] = info
         self.timeseries[key] = self.loader.load_data_for_date(info)
         return self.timeseries[key]
@@ -147,7 +147,7 @@ class DataCache:
         else:
             return self.dates[key]
 
-    def _lookup_determinand_name(self, datasetID: str, determinand: str) -> str | None:
+    def lookup_determinand_name(self, datasetID: str, determinand: str) -> str | None:
             for _, row in self.determinands.iterrows():
                 for d in row["datasets"]:
                     if d["code"] == datasetID and d["id"] == determinand:
