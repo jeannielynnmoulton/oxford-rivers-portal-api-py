@@ -78,7 +78,7 @@ class DataCache:
             sites_df = self.sites[info.datasetID]
             sites_name: str = "_".join(sites_df[sites_df["properties_id"] == info.siteID]["properties_name"].iloc[0].split(" "))
             print(sites_name)
-            determinand_name: str = self._lookup_determinand_name(info.datasetID, info.determinand)
+            determinand_name: str = self.lookup_determinand_name(info.datasetID, info.determinand)
             key = "_".join([info.datasetID, sites_name, determinand_name])
         self.key_to_info[key] = info
         self.timeseries[key] = self.loader.load_timeseries(info)
@@ -147,7 +147,7 @@ class DataCache:
         else:
             return self.dates[key]
 
-    def _lookup_determinand_name(self, datasetID: str, determinand: str) -> str | None:
+    def lookup_determinand_name(self, datasetID: str, determinand: str) -> str | None:
             for _, row in self.determinands.iterrows():
                 for d in row["datasets"]:
                     if d["code"] == datasetID and d["id"] == determinand:
